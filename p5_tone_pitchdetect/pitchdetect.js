@@ -268,7 +268,15 @@ function autoCorrelateFloat( buf, sampleRate ) {
 */
 
 var MIN_SAMPLES = 0;  // will be initialized when AudioContext is created.
-var GOOD_ENOUGH_CORRELATION = 0.9; // this is the "bar" for how close a correlation needs to be
+var GOOD_ENOUGH_CORRELATION = 0.5; // this is the "bar" for how close a correlation needs to be
+
+//-Dominic
+//I'm changing this "good enough correlation" number as I test
+//to see if I can smooth out the note estimation
+//original example was 0.9
+//Also, might make sense to do some audio effect processing to the analyzed audio
+//	ie; take out frequencies that we don't want to bother analyzing
+//-Dominic
 
 function autoCorrelate( buf, sampleRate ) {
 	var SIZE = buf.length;

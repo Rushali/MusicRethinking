@@ -4,6 +4,8 @@ var mySound;
 var mySoundRecorder;
 var isRecording;
 
+var synth = new Tone.PolySynth(6, Tone.Synth).toMaster();
+
 function setup(){  
   Tone.setContext(getAudioContext());
 
@@ -20,15 +22,14 @@ function setup(){
 
   
 
-
-
-  //usually would do .connect(),
-  //but won't work with a p5 object
+  //usually we do .connect() or .toMaster
+  //but won't work with a p5 object, like the recorded buffer object we use for p5 sound
   //need to find a way to pass it to a tone object
 
 
-  //Later to do
+  //Later to try:
   //try doing a p5 recording directly into a tone buffer
+  //but that might not be necessary
 
 
   isRecording = 0;
@@ -45,8 +46,10 @@ function setup(){
 
 
 
-
-  var synth = new Tone.PolySynth(6, Tone.Synth).toMaster();
+  //This is just a starting tone to make sure tone.js is working
+  //and to use as a template/copy paste code
+  //
+  // 
   //set the attributes using the set interface
   synth.set("detune", -1200);
   //play a chord
@@ -85,7 +88,6 @@ function keyPressed(){
   console.log("play sound");
   //mySound.play();
   toneSampler.triggerAttack(1);
-  //save(mySound,"mySound.wav");
 
   } if(key ==" "){
    granularSet(); 
@@ -99,12 +101,28 @@ function keyPressed(){
           //mic.connect();
     			mic.amp(1);
           }
-   
+    if(key == "T"){
+          //imported from pitchdetect.js
+          //
+          //var note =  noteFromPitch( pitch );
+  		    //noteElem.innerHTML = noteStrings[note%12];
+          //
+          //these variables are in pitchdetect and are used for the main
+          //text that shows notes in the example
+          //
+          //
+          //we're using them here to give to a tone.js synth
+          //Pressing the "T" button will play the note currently currently analyzed
+          //(if "blank" it should default to the most recent analysis)
+
+          var note =  noteFromPitch( pitch );
+          var currentAnalyzedNote = noteStrings[note%12];
+
+          console.log("t pressed, detected " + currentAnalyzedNote);
+          synth.triggerAttackRelease([currentAnalyzedNote + "5"], "4n");
+          }
   else{
   //console.log("Key Pressed");
-    //mySoundRecorder.record(mySound);
-	
-  //mySoundRecorder.record(mic.buffer);
   }
 }
 
