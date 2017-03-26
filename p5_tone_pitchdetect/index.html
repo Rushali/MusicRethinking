@@ -33,7 +33,10 @@
     <p>
 			<button onclick="this.innerText = togglePlayback()">use demo audio</button>
 			<button onclick="toggleLiveInput()">use live input</button>
-			<button onclick="toggleOscillator()">use oscillator</button>
+			<button id="test" onclick="toggleOscillator()">use oscillator</button>
+			<p>Load new demo audio</p>
+			<input onchange="loadUserAudioFile(this.files)" type="file"></input>
+			
 			<!--<button onclick="updatePitch(0);">sample</button>-->
 		</p>
 
