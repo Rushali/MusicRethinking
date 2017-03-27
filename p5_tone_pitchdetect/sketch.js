@@ -51,6 +51,8 @@ function setup(){
   synth.triggerAttackRelease(["C4", "E4", "A4"], "4n");
 
 }
+
+
 function draw(){
   toneSampler.loop=0;
   //not sure why this has to be set here, but it loops otherwise
@@ -134,7 +136,17 @@ function keyPressed(){
 
           console.log("t pressed, detected " + currentAnalyzedNote);
           synth.triggerAttackRelease([currentAnalyzedNote + "5"], "4n");
-          }
+        }
+        
+        if (key=="S"){
+          //-Dominic
+          //save the current audio buffer
+          //looks like it might need to be done with p5
+          //
+
+          save(mySound, "SoundSample.wav");
+
+        }
   else{
   //console.log("Key Pressed");
   }
