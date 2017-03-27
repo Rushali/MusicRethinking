@@ -1,23 +1,24 @@
-  
 var mic;
 var mySound;
 var mySoundRecorder;
 var isRecording;
+var recordbutton;
 
 var synth = new Tone.PolySynth(6, Tone.Synth).toMaster();
 
 function setup(){  
-  Tone.setContext(getAudioContext());
+  recordbutton = select("#record");
+  recordbutton.mouseClicked(startrecording);
 
+
+
+  Tone.setContext(getAudioContext());
   pitchShiftProcess = new Tone.PitchShift({
     "pitch" : 0.5
 
   }).toMaster();
-
   toneSampler = new Tone.Sampler({
     "loop" : false
-
-
   }).toMaster();
 
   
@@ -33,18 +34,12 @@ function setup(){
 
 
   isRecording = 0;
-
   mic = new p5.AudioIn();
   mic.start();
   mic.connect();
   mySound = new p5.SoundFile();
   mySoundRecorder = new p5.SoundRecorder();
   mySoundRecorder.setInput(mic);
-
-
-
-
-
 
   //This is just a starting tone to make sure tone.js is working
   //and to use as a template/copy paste code
@@ -72,6 +67,25 @@ function draw(){
 
 function mousePressed(){
   
+}
+
+function startrecording()
+{ 
+    changetext();
+    console.log("recordbutton pressed");
+          isRecording = 1;
+          mySoundRecorder.record(mySound);
+         
+}
+
+function changetext(){
+
+    recordbutton = document.getElementById("record");
+    var text = recordbutton.value;
+    if(text == 'record')
+    recordbutton.value = 'stop recording';
+    if(text == 'stop recording')
+    recordbutton.value = 'record';
 }
 
 
