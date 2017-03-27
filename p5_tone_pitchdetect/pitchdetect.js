@@ -43,7 +43,10 @@ window.onload = function() {
 	audioContext = new AudioContext();
 	MAX_SIZE = Math.max(4,Math.floor(audioContext.sampleRate/5000));	// corresponds to a 5kHz signal
 	var request = new XMLHttpRequest();
-	request.open("GET", "../sounds/whistling3.ogg", true);
+	
+	
+
+	request.open("GET", "SoundSample.wav", true);
 	request.responseType = "arraybuffer";
 	request.onload = function() {
 	  audioContext.decodeAudioData( request.response, function(buffer) { 
@@ -88,7 +91,7 @@ window.onload = function() {
 	  	return false;
 	};
 
-
+	
 
 }
 
@@ -178,9 +181,48 @@ function toggleLiveInput() {
 	//example here: variable "mic" is a p5 AudioIn object, which uses a plain html5 MediaStream type object
 	//to access the AudioIn's MediaStream, type the varible and then .stream
 	gotStream(mic.stream);
-	
-
 }
+
+
+
+
+//-Dominic
+	//I've added this here
+	//loadUserAudioFile isn't part of the original pitchdetect
+
+//This (finally) works
+//loading local audio files, you need to set up a server to make it work
+
+function loadUserAudioFile(files) {
+	
+	//these lines read the incoming files array
+	//we're only working with one file at a time right now,
+	//so we're only going to check for the first entry
+	var audioFile;
+	file = files[0];
+
+	//I have, more or less, tried to re-create the "createFileInput" structure provided by p5.DOM
+	//After MUCH troubleshooting, I figured out I need a callback function
+
+	var reader = new FileReader();
+	reader.addEventListener("load",function(){
+		function loadLocalFileToBuffer(){
+			//Once we know the file is loaded, we set all the appropriate buffers
+			toneSampler.set(mySound);
+			theBuffer = mySound.buffer;
+		}
+		//The second argument of a p5 soundfile's "loadSound()" function execues after the file is loaded
+		mySound = loadSound(reader.result,loadLocalFileToBuffer);
+	},false);
+
+	if(file){
+  		reader.readAsDataURL(file);
+	}
+}
+
+
+//Ends my addition
+//Back to your regularly schedules pitchdetect.js
 
 function togglePlayback() {
     if (isPlaying) {
