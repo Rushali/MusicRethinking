@@ -15,17 +15,21 @@ var amp;
 var fft;
 var volhistory = [];
 var w;
+var vol;
+var diam;
+var spectrum;
 
 var synth = new Tone.PolySynth(6, Tone.Synth).toMaster();
 
 function setup(){  
 
   canvas = createCanvas(1366, 784);
+  canvas.parent('mainpart');
 
   colorMode(HSB);
   angleMode(DEGREES);
   //song.play();
-  fft = new p5.FFT(0.9, 128);
+  fft = new p5.FFT(0.8, 256);
   w = width/256;
 
   amp = new p5.Amplitude();
@@ -75,24 +79,25 @@ function setup(){
 function draw() {
  
   background(255);
-  var vol = amp.getLevel();
-  var diam = map(vol, 0, 0.3, 10, 200);
+  //vol = amp.getLevel();
+  diam = map(vol, 0, 0.3, 10, 200);
   fill(255, 0, 255);
-  ellipse(width / 2, height / 2, diam, diam);
+  //console.log(diam);
+  //ellipse(width / 2, height / 2, diam, diam);
   
-
-  // var spectrum = fft.analyze();
-  // for (var i = 0; i < spectrum.length; i++) {
-  //   var angle = map(i, 0, spectrum.length, 0, 360);
-  //   var amp = spectrum[i];
-  //   var r = map(amp, 0, 256, 30, 100);
-  //   var x = r * cos(angle);
-  //   var y = r * sin(angle);
-  //   tint(255, 126); 
-  //   stroke(i, 255, 150);
-  //   line(0, 0, x, y);
+  translate(width/2, height/2);
+  spectrum = fft.analyze();
+  for (var i = 0; i < spectrum.length; i++) {
+    var angle = map(i, 0, spectrum.length, 0, 360);
+    var amp = spectrum[i];
+    var r = map(amp, 0, 256, 100, 700);
+    var x = r * cos(angle);
+    var y = r * sin(angle);
+    tint(255, 126); 
+    stroke(i, 255, 150);
+    line(0, 0, x, y);
   
-  // }
+  }
 
 
   toneSampler.loop=0;
@@ -156,6 +161,11 @@ function mutemic() {
   console.log("mute mic");
     //mic.disconnect();
     mic.amp(0); 
+}
+
+function sensitivity()
+{
+  console.log("sensitivity was changed");
 }
 
 
