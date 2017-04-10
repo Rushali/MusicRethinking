@@ -1,5 +1,3 @@
-// get rid of getLevel error
-// 
 
 
 var canvas;
