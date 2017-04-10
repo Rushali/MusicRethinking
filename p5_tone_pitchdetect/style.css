@@ -1,4 +1,90 @@
-html, body {
-  margin: 0;
-  padding: 0;
+body { 
+	margin: 0;
+  	padding: 0;
+	font: 14pt 'Alike', sans-serif;
+	}
+#note { 
+	font-size: 164px; 
+	display: inline-block; 
+	height:180px; 
+	text-align: left;
+}
+
+#micmute {
+	/*background-color:white; */
+	margin-left:auto; 
+	margin-right:auto; 
+	
+}
+
+p {
+	margin-right: auto;
+	margin-left: auto;
+
+}
+
+#sensitivity {
+	/*background-color:white; */
+	margin-left:auto; 
+	margin-right:auto; 
+}
+
+
+
+input[type="button"]#record 
+{
+	color: black;
+}
+
+#detector {
+	width: 300px; 
+	height: 300px; 
+	border: 4px solid gray; 
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 8px; 
+	text-align: center; 
+	padding-top: 10px;
+	}
+
+.droptarget { 
+	background-color: #348781
+}
+
+div.confident { 
+	color: black; 
+}
+
+div.vague { 
+	color: lightgrey; 
+}
+			
+#output { 
+	width: 300px; 
+	height: 42px; 
+	color: red;
+}
+			
+span#flat { 
+	display: inline; 
+}
+span#sharp { 
+	display: inline; 
+}
+
+.testbutton {
+  font-family: helvetica;
+  color: #14396A !important;
+  font-size: 14px;
+  box-shadow: 1px 1px 1px #BEE2F9;
+  padding: 9px 25px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  border: 2px solid #3866A3;
+  background: #FFFFFF;
+}
+.testbutton:hover {
+  color: #14396A !important;
+  background: #C7D4D6;
 }

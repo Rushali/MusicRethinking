@@ -1,8 +1,23 @@
+// get rid of getLevel error
+// 
+
+
+var canvas;
+
 var mic;
 var mySound;
 var mySoundRecorder;
 var isRecording;
 var recordbutton;
+var rID = null;
+var song;
+var amp;
+var fft;
+var volhistory = [];
+var w;
+var vol;
+var diam;
+var spectrum;
 
 var recInfoStatus;
 
@@ -17,8 +32,7 @@ var midiPart
 var synth = new Tone.PolySynth(6, Tone.Synth).toMaster();
 
 function setup(){  
-  recordbutton = select("#record");
-  recordbutton.mouseClicked(startrecording);
+
 
   recInfoStatus = [
     {startTime : 0},
@@ -32,6 +46,18 @@ function setup(){
     //at that point, you calculate the difference, end time minus start time
   ];
 
+  canvas = createCanvas(1366, 784);
+  canvas.parent('mainpart');
+
+
+  colorMode(HSB);
+  angleMode(DEGREES);
+  //song.play();
+  fft = new p5.FFT(0.8, 256);
+  w = width/256;
+
+  amp = new p5.Amplitude();
+  amp.setInput(mic);
 
   Tone.setContext(getAudioContext());
   pitchShiftProcess = new Tone.PitchShift({
@@ -120,13 +146,33 @@ function setup(){
 
 function draw(){
   toneSampler.loop=1;
+ 
+  background(255);
+  //vol = amp.getLevel();
+  diam = map(vol, 0, 0.3, 10, 200);
+  fill(255, 0, 255);
+  //console.log(diam);
+  //ellipse(width / 2, height / 2, diam, diam);
+  
+  translate(width/2, height/2);
+  spectrum = fft.analyze();
+  for (var i = 0; i < spectrum.length; i++) {
+    var angle = map(i, 0, spectrum.length, 0, 360);
+    var amp = spectrum[i];
+    var r = map(amp, 0, 256, 100, 700);
+    var x = r * cos(angle);
+    var y = r * sin(angle);
+    tint(255, 126); 
+    stroke(i, 255, 150);
+    line(0, 0, x, y);
+  
+  }
+
+
+  toneSampler.loop=0;
   //not sure why this has to be set here, but it loops otherwise
-
-  background(0);
   micLevel = mic.getLevel();
-  ellipse(width/2, constrain(height-micLevel*height*5, 0, height), 10, 10);
-
-
+  //ellipse(width/2, constrain(height-micLevel*height*5, 0, height), 10, 10);
   //taking function from pitchdetect.js
   //gotStream(getAudioContext());
 
@@ -141,28 +187,68 @@ function draw(){
   writeMIDICurrentNote();
 }
 
-function mousePressed(){
-  
-}
 
-function startrecording()
+function checkrecording()
 { 
-    changetext();
-    console.log("recordbutton pressed");
-          isRecording = 1;
-          mySoundRecorder.record(mySound);
-         
+  if(isRecording==0)
+  {isRecording = 1;
+    mySoundRecorder.record(mySound);
+    console.log(mySound);
+  currentvalue = document.getElementById('record').value;
+  if(currentvalue == "stop"){
+    document.getElementById("record").value="record";
+  }else{
+    document.getElementById("record").value="stop";
+  }
+  console.log("recordbutton pressed");
+}else if(isRecording==1)
+  { console.log("Key Released");
+    isRecording = 0;
+    mySoundRecorder.stop();
+    toneSampler.set(mySound);
+    theBuffer = mySound.buffer;
+  }
+         //console.log(currentvalue);
+         //console.log(document.getElementById("record").value);
 }
 
-function changetext(){
-
-    recordbutton = document.getElementById("record");
-    var text = recordbutton.value;
-    if(text == 'record')
-    recordbutton.value = 'stop recording';
-    if(text == 'stop recording')
-    recordbutton.value = 'record';
+function saveaudio(){
+  save(mySound, "SoundSample.wav");
+  console.log("save audio");
 }
+
+
+function savemidi(){
+  console.log("save midi");
+}
+
+function playaudio() {
+  console.log("play audio");
+}
+
+function playmidi() {
+  console.log("play midi");
+}
+
+function playsound() {  
+  toneSampler.triggerAttack(1);
+  console.log("play sound");
+}
+
+function mutemic() {
+  console.log("mute mic");
+    //mic.disconnect();
+    mic.amp(0); 
+}
+
+function sensitivity()
+{
+  console.log("sensitivity was changed");
+}
+
+
+
+
 
 
 //Section for Rune to look at
@@ -271,7 +357,7 @@ function keyPressed(){
           //
           //
           //we're using them here to give to a tone.js synth
-          //Pressing the "T" button will play the note currently currently analyzed
+          //Pressing the "T" button will play the note currently analyzed
           //(if "blank" it should default to the most recent analysis)
 
           var note =  noteFromPitch( pitch );
@@ -332,5 +418,15 @@ function keyReleased(){
     mySoundRecorder.stop();
     toneSampler.set(mySound);
     theBuffer = mySound.buffer;
+  }
+}
+
+function onoff(){
+  console.log("onoff working")
+  currentvalue = document.getElementById('onoff').value;
+  if(currentvalue == "Off"){
+    document.getElementById("onoff").value="On";
+  }else{
+    document.getElementById("onoff").value="Off";
   }
 }
