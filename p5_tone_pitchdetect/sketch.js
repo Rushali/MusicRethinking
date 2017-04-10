@@ -108,6 +108,9 @@ function setup(){
 
   }, midi.tracks[0].notes);
 
+
+
+  Tone.Transport.bpm.value = midi.header.bpm;
   Tone.Transport.start();
 
 
@@ -166,26 +169,23 @@ function changetext(){
 //
 //Experimental function to save midi info blob
 //Currently does not work
-var saveMidiData = (function () {
+var saveMidiData = function (data,fileName) {
     var a = document.createElement("a");
     document.body.appendChild(a);
     a.style = "display: none";
-    return function (data, fileName) {
-        var json = JSON.stringify(data),
-            blob = new Blob([json], {type: "octet/stream"}),
-            url = window.URL.createObjectURL(blob);
-        a.href = url;
-        a.download = fileName;
-        a.click();
-        window.URL.revokeObjectURL(url);
-    };
-}());
+    blob = new Blob(data, {type: "octet/stream"}),
+    url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+};
 
 
 function writeMIDICurrentNote(){
 
 if(isRecording){
-  console.log("inside writeMIDICurrentNote");
+  //console.log("inside writeMIDICurrentNote");
 
     //noteElem.innerHTML
 
@@ -300,9 +300,19 @@ function keyPressed(){
           //
 
           //Encoding the current sequence into the proper Midi format
-          midiBlob = midi.encode();
+          
           //Saving that encoding to user's machine. Currently not working
-          saveMidiData(midiBlob, "testMidiBlob.mid");
+          //saveMidiData(midi.toArray(), "testMidiBlob.mid");
+
+          var data = 'data:audio/midi;base64,' + btoa(midi.encode())
+          var element = document.createElement('a');
+          element.setAttribute('href', data);
+          element.setAttribute('download', 'miditest.midi');
+          element.style.display = 'none';
+          document.body.appendChild(element);
+          element.click();
+          document.body.removeChild(element);
+
         }
   else{
   //console.log("Key Pressed");
