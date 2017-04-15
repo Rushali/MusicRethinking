@@ -115,7 +115,7 @@ function setup() {
   //Load a Midi sequence and play through the synth
   //
 
-  midiPart = new Tone.Pattern(function (time, note) {
+  midiPart = new Tone.Part(function (time, note) {
     //Originally "part" instead of pattern
 
     //use the events to play the synth
@@ -269,6 +269,22 @@ function writeMIDICurrentNote() {
     //The added note is 0.01 seconds long
     //Will later adjust length based on different parameters
 
+
+    //midiPart .add() function
+    //.removeAll to clear
+    //or new midiPart entirely
+
+    midiPart = new Tone.Part(function (time, note) {
+    //Originally "part" instead of pattern
+
+    //use the events to play the synth
+    synth.triggerAttackRelease(note.name, note.duration, time, note.velocity)
+    //Currently, the "time" doesn't work
+    //need to figure how to properly implement note.time
+
+  }, midi.tracks[0].notes);
+
+
   }
 }
 
@@ -285,7 +301,7 @@ function keyPressed() {
   if (key == "P") {
     console.log("play sound");
     toneSampler.triggerAttack(1);
-    midiPart.index = 0;
+    //midiPart.index = 0;
     midiPart.start();
 
   } if (key == " ") {
