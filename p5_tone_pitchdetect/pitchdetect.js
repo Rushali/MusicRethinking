@@ -40,7 +40,7 @@ var detectorElem,
 	detuneAmount;
 
 window.onload = function() {
-	audioContext = new AudioContext();
+	//audioContext = new AudioContext();
 	MAX_SIZE = Math.max(4,Math.floor(audioContext.sampleRate/5000));	// corresponds to a 5kHz signal
 	var request = new XMLHttpRequest();
 	
@@ -92,7 +92,7 @@ window.onload = function() {
 	};
 
 	
-
+	
 }
 
 function error() {

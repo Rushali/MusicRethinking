@@ -13,7 +13,6 @@
 
   </head>
   <body>
-  
 
     <p align="center">
 			<!-- <button id = "demo" onclick="this.innerText = togglePlayback()">use demo audio</button> -->
@@ -63,16 +62,26 @@
 
 
 		
-
+		
     <script src="pitchdetect.js"></script>
      <script src="sketch.js"></script>
+	 <script src="nexusUI.js"></script>
 
-     <div id="mainpart" >
+	<script>
+		  nx.onload = function() {
+			  //nx.context=getAudioContext();
+	keyboard1.octaves = 1;
+	keyboard1.init();	
+		  }
+      </script>
+	 
+	
+     <div id="mainpart">
      	
 
 
 
-
+		
      </div>
 
      <div align="center" id="detector" class="vague">
@@ -85,8 +94,16 @@
 				<span id="flat">cents &#9837;</span>
 				<span id="sharp">cents &#9839;</span>
 			</div>
-		</div>
+			<p>
+				
+      </div>
+	  
+	  <canvas nx="keyboard"></canvas>
 
+      
+		</div>
+		
+		
 
   </body>
 </html>
