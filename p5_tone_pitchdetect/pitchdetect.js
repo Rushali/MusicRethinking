@@ -92,7 +92,7 @@ window.onload = function() {
 	};
 
 	
-
+	
 }
 
 function error() {
@@ -111,9 +111,9 @@ function getUserMedia(dictionary, callback) {
     }
 }
 
-function gotStream(stream) {
+function gotStream() {
     // Create an AudioNode from the stream.
-    mediaStreamSource = audioContext.createMediaStreamSource(stream);
+    mediaStreamSource = audioContext.createMediaStreamSource(mic.stream);
 
     // Connect it to the destination.
     analyser = audioContext.createAnalyser();
