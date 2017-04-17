@@ -57,12 +57,12 @@ window.onload = function() {
 
 	detectorElem = document.getElementById( "detector" );
 	canvasElem = document.getElementById( "output" );
-	DEBUGCANVAS = document.getElementById( "waveform" );
-	if (DEBUGCANVAS) {
-		waveCanvas = DEBUGCANVAS.getContext("2d");
-		waveCanvas.strokeStyle = "black";
-		waveCanvas.lineWidth = 1;
-	}
+	// DEBUGCANVAS = document.getElementById( "waveform" );
+	// if (DEBUGCANVAS) {
+	// 	waveCanvas = DEBUGCANVAS.getContext("2d");
+	// 	waveCanvas.strokeStyle = "black";
+	// 	waveCanvas.lineWidth = 1;
+	// }
 	pitchElem = document.getElementById( "pitch" );
 	noteElem = document.getElementById( "note" );
 	detuneElem = document.getElementById( "detune" );
@@ -122,31 +122,31 @@ function gotStream(stream) {
     updatePitch();
 }
 
-function toggleOscillator() {
-    if (isPlaying) {
-        //stop playing and return
-        sourceNode.stop( 0 );
-        sourceNode = null;
-        analyser = null;
-        isPlaying = false;
-		if (!window.cancelAnimationFrame)
-			window.cancelAnimationFrame = window.webkitCancelAnimationFrame;
-        window.cancelAnimationFrame( rafID );
-        return "play oscillator";
-    }
-    sourceNode = audioContext.createOscillator();
+// function toggleOscillator() {
+//     if (isPlaying) {
+//         //stop playing and return
+//         sourceNode.stop( 0 );
+//         sourceNode = null;
+//         analyser = null;
+//         isPlaying = false;
+// 		if (!window.cancelAnimationFrame)
+// 			window.cancelAnimationFrame = window.webkitCancelAnimationFrame;
+//         window.cancelAnimationFrame( rafID );
+//         return "play oscillator";
+//     }
+//     sourceNode = audioContext.createOscillator();
 
-    analyser = audioContext.createAnalyser();
-    analyser.fftSize = 2048;
-    sourceNode.connect( analyser );
-    analyser.connect( audioContext.destination );
-    sourceNode.start(0);
-    isPlaying = true;
-    isLiveInput = false;
-    updatePitch();
+//     analyser = audioContext.createAnalyser();
+//     analyser.fftSize = 2048;
+//     sourceNode.connect( analyser );
+//     analyser.connect( audioContext.destination );
+//     sourceNode.start(0);
+//     isPlaying = true;
+//     isLiveInput = false;
+//     updatePitch();
 
-    return "stop";
-}
+//     return "stop";
+// }
 
 function toggleLiveInput() {
     if (isPlaying) {
@@ -253,9 +253,11 @@ function togglePlayback() {
     return "stop";
 }
 
+// 
+
 var rafID = null;
 var tracks = null;
-var buflen = 1024;
+var buflen = 2048;
 var buf = new Float32Array( buflen );
 
 var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
