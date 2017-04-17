@@ -1,6 +1,6 @@
 <html>
   <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/p5.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/addons/p5.dom.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/addons/p5.sound.min.js"></script>
     <script src="https://tonejs.github.io/build/Tone.min.js"></script>
@@ -10,7 +10,7 @@
     
     <link rel="stylesheet" type="text/css" href="style.css">
 	<link href='http://fonts.googleapis.com/css?family=Alike' rel='stylesheet' type='text/css'>
-
+<script src="https://rawgit.com/lsu-emdm/nexusUI/master/dist/nexusUI.min.js"></script>
   </head>
   <body>
 
@@ -62,18 +62,7 @@
 
 
 		
-		
-    <script src="pitchdetect.js"></script>
-     <script src="sketch.js"></script>
-	 <script src="nexusUI.js"></script>
-
-	<script>
-		  nx.onload = function() {
-			  //nx.context=getAudioContext();
-	keyboard1.octaves = 1;
-	keyboard1.init();	
-		  }
-      </script>
+		 
 	 
 	
      <div id="mainpart">
@@ -98,11 +87,26 @@
 				
       </div>
 	  
-	  <canvas nx="keyboard"></canvas>
+	  <canvas nx="keyboard" style="width:800px;height:170px"></canvas>
 
       
 		</div>
 		
+	
+	 <script src="nexusUI.js"></script>	
+	<script src="getchords.js"></script>	
+    <script src="pitchdetect.js"></script>
+     <script src="sketch.js"></script>
+	<!--<script src="https://rawgit.com/lsu-emdm/nexusUI/master/dist/nexusUI.min.js"></script>
+    -->
+
+	<script>
+		  nx.onload = function() {
+			  //nx.context=getAudioContext();
+	keyboard1.octaves = 1;
+	keyboard1.init();	
+		  }
+      </script>
 		
 
   </body>
