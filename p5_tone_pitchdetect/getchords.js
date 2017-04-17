@@ -1,6 +1,17 @@
+var responseArray = [];
+
+var predElem = document.getElementById("prechord");
+
+// var notefrom ;
+
+// if(document.getElementById("note") != null){
+//      notefrom = document.getElementById("note");
+//var incomingInformation = note ;
+
 function getChords(incomingInformation) {
 
-var responseArray = [];
+
+
   console.log("I have been given " + incomingInformation + " chord.");
   
 
@@ -151,6 +162,29 @@ var responseArray = [];
     responseArray[9] = incomingInformation + " detected. This is part of a B7 Chord. Other notes include #D/bE, #F/bG and A.";
     responseArray[10] =incomingInformation + " detected. This is part of a Bm7 Chord. Other notes include D, #F/bG and A.";
   }
+
+
+  return  responseArray;
+}
+
+function majorchord() {
+    document.getElementById("prechord").innerHTML = responseArray[0];
+
+
+}
+
+
+function minorchord() {
+document.getElementById("prechord").innerHTML = responseArray[1];
+
+
+}
+
+function randomchord() {
+
+for(var i = 2;i<11;i++){
+document.getElementById("prechord").innerHTML = responseArray[i];
+}
 
   return  responseArray;
 }

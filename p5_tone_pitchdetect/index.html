@@ -6,6 +6,11 @@
     <script src="https://tonejs.github.io/build/Tone.min.js"></script>
 	<script src="https://tonejs.github.io/MidiConvert/build/MidiConvert.js"></script>
 	<script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
+
+	<script src="pitchdetect.js"></script>
+	<script src="getchords.js"></script>
+    <script src="sketch.js"></script>
+
 	
     
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -24,7 +29,7 @@
 
 			</a> -->
 
-			<button id="record" onclick="checkrecording()">record</button>
+			<button id="record" onclick="checkrecording()" innerText="record">record</button>
 
 			<button id="playaudio" onclick="playaudio()">Play Audio</button>
 			
@@ -37,7 +42,9 @@
 
 			
 
-			<button id="micmute" onclick="mutemic()">MIC MUTE</button>
+			<button id="micmute" onclick="mutemic()" value="On">MUTE</button>
+
+			<button id="getchords" onclick="getChords(document.getElementById('note').innerHTML)" innerText="get chords">get chords</button>
 
 
 
@@ -56,42 +63,43 @@
 			<!-- <button onclick="updatePitch(0);">sample</button> -->
 			<input align="center" value="sensitivity" id="sensitivity" onchange="sensitivity()" type="range"></input>
 
+			<div align="center" id="detector" class="vague">
+		     	
+					<div id="d2" class="note">
+						<span id="note">--</span>
+					</div>  
 
+					<div id="d3" class="pitch">
+						<span id="pitch">--</span>
+					Hz</div>
 
-		</p>
-
-
-		
-		 
-	 
-	
-     <div id="mainpart">
-     	
-
-
-
-		
-     </div>
-
-     <div align="center" id="detector" class="vague">
-     	<canvas id="output" width=1366 height=784></canvas>
-			<div class="pitch"><span id="pitch">--</span>Hz</div>
-			<div class="note"><span id="note">--</span></div>   
-			
-			<div id="detune">
-				<span id="detune_amt">--</span>
-				<span id="flat">cents &#9837;</span>
-				<span id="sharp">cents &#9839;</span>
+					<div id="detune">
+						<span id="detune_amt">--
+						</span>
+						<span id="flat">cents &#9837;
+						</span>
+						<span id="sharp">cents &#9839;
+						</span>
+					</div>
 			</div>
-			<p>
-				
-      </div>
-	  
-	  <canvas nx="keyboard" style="width:800px;height:170px"></canvas>
 
-      
-		</div>
-		
+		<div align="right" id="predictedchords" class="predict">
+
+
+			<button id="majorchord" onclick="majorchord()">Major Chord</button>
+
+
+			<button id="minorchord" onclick="minorchord()">Minor Chord</button>
+			
+			<button id="randomchord" onclick="randomchord()">Random Chord</button>
+
+			<span id="prechord">--
+			</span>
+
+
+	  
+	  <!--<canvas nx="keyboard" style="width:800px;height:170px"></canvas>
+        -->
 	
 	 <script src="nexusUI.js"></script>	
 	<script src="getchords.js"></script>	
@@ -108,6 +116,5 @@
 		  }
       </script>
 		
-
-  </body>
+    </body>
 </html>

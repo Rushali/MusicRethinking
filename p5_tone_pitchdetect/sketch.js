@@ -13,23 +13,27 @@
 
 
 var canvas;
-
-var mic;
+var mic = new p5.AudioIn();
+var micon = 0;
 var mySound;
 var mySoundRecorder;
-var isRecording;
+var isRecording = 0;
 var recordbutton;
 var rID = null;
 var song;
-var amp;
-var fft;
+var amp1 = new p5.Amplitude();
+var fft = new p5.FFT(0.8, 256);
 var volhistory = [];
 var w;
 var vol;
 var diam;
 var spectrum;
-
 var recInfoStatus;
+
+
+var div2 = document.getElementById("d2");
+var div3 = document.getElementById("d3");
+var div3 = document.getElementById("detune");
 
 
 
@@ -37,13 +41,14 @@ var recInfoStatus;
 var midi;
 
 //midi score part object, for Tone.js note playback
-var midiPart
+var midiPart;
 
 //synthesizer, for Tone.js voice
 var synth = new Tone.PolySynth(6, Tone.Synth).toMaster();
 
 function setup() {
 
+  
   // var audioContext = window.AudioContext || window.webkitAudioContext;
 	// this.context = new audioContext();
   //audioContext = getAudioContext();
@@ -63,17 +68,29 @@ function setup() {
   ];
 
   canvas = createCanvas(1366, 784);
-  canvas.parent('mainpart');
+  canvas.id("maincanvas");
+  //var div1 = document.getElementById("detector");
+  //canvas.parent("detector");
+  //document.getElementById("maincanvas").appendChild(div1);
 
 
   colorMode(HSB);
   angleMode(DEGREES);
 
-  fft = new p5.FFT(0.8, 256);
-  w = width / 256;
+  
+  w = width / 2048;
+
 
   amp = new p5.Amplitude();
   amp.setInput(mic);
+
+  
+  //Rushali's pretty branch didn't have the above two lines,
+  //just the commented out one below:
+  //amp1.setInput(mic);
+
+
+  
   Tone.setContext(getAudioContext());
   pitchShiftProcess = new Tone.PitchShift({
     "pitch": 0.5
@@ -82,8 +99,6 @@ function setup() {
   toneSampler = new Tone.Sampler({
     "loop": false
   }).toMaster();
-
-
 
   //Using MidiConvert.js from Tone.js
   // create a new midi file
@@ -98,23 +113,19 @@ function setup() {
   // .note(63, 1, 1)
   // .note("C6", 2, 1);
 
-
-
-
   isRecording = 0;
+
   //There is "recInfoStatus", which will replace this eventually
   //But we'll use this boolean for now
 
   //p5 audio Mic for recording into a p5 buffer
   //Which then can be put into a Tone buffer later on
-  mic = new p5.AudioIn();
+  
   mic.start();
   mic.connect();
   mySound = new p5.SoundFile();
   mySoundRecorder = new p5.SoundRecorder();
   mySoundRecorder.setInput(mic);
-
-
 
   //Load a Midi sequence and play through the synth
   //
@@ -128,6 +139,7 @@ function setup() {
     //need to figure how to properly implement note.time
 
   }, midi.tracks[0].notes);
+
 
 
   midiRecordingLoop = new Tone.Loop(function (time) {
@@ -157,47 +169,53 @@ function setup() {
   Tone.Transport.bpm.value = midi.header.bpm;
   Tone.Transport.start();
 
-  
-  
 }
 
 
 function draw() {
+  
   toneSampler.loop = 0;
 
+  
   background(255);
-  //vol = amp.getLevel();
-  diam = map(vol, 0, 0.3, 10, 200);
-  fill(255, 0, 255);
+
+  // vol = amp1.getLevel();
+  // diam = map(vol, 0, 0.3, 10, 200);
+
   //console.log(diam);
   //ellipse(width / 2, height / 2, diam, diam);
+  //pushMatrix();
 
-  translate(width / 2, height / 2);
+  translate(width / 4, height / 4);
   spectrum = fft.analyze();
   for (var i = 0; i < spectrum.length; i++) {
     var angle = map(i, 0, spectrum.length, 0, 360);
-    var amp = spectrum[i];
-    var r = map(amp, 0, 256, 100, 700);
+    var amp2 = spectrum[i];
+    var r = map(amp2, 0, 512, 100, 1000);
     var x = r * cos(angle);
     var y = r * sin(angle);
     tint(255, 126);
     stroke(i, 255, 150);
     line(0, 0, x, y);
-
   }
 
+
+  //run input through low pas mid pass hi pass filters, 
+  //popMatrix();
 
   toneSampler.loop = 0;
   //not sure why this has to be set here, but it loops otherwise
 
   micLevel = mic.getLevel();
+  
   //ellipse(width/2, constrain(height-micLevel*height*5, 0, height), 10, 10);
 
 
+  
+
 
   //writeMIDICurrentNote();
-  //Currently "writing" notes in the draw function, fast as possible
-  //Later we will only access our midi writer at specific intervals
+  //old method of writing the notes
 
 
   highlightNoteKey(freqToMidi(pitch));
@@ -208,22 +226,26 @@ function checkrecording() {
   if (isRecording == 0) {
     isRecording = 1;
     mySoundRecorder.record(mySound);
+    recInfoStatus.startTime = new Date();
     console.log(mySound);
-    currentvalue = document.getElementById('record').value;
-    if (currentvalue == "stop") {
-      document.getElementById("record").value = "record";
-    } else {
-      document.getElementById("record").value = "stop";
+    // if (currentvalue == "record") {
+    document.getElementById("record").innerText = "stop";
+      console.log("recordbutton pressed"); 
     }
-    console.log("recordbutton pressed");
-  } else if (isRecording == 1) {
+    else if(isRecording == 1) {
+    document.getElementById("record").innerText = "record";
     console.log("Key Released");
     isRecording = 0;
     mySoundRecorder.stop();
     toneSampler.set(mySound);
     theBuffer = mySound.buffer;
-  }
-}
+    recInfoStatus.endTime = new Date();
+    var timeDiff = recInfoStatus.endTime - recInfoStatus.startTime;
+    recInfoStatus.timeLength = timeDiff;
+    
+    }
+} 
+
 
 function saveaudio() {
   save(mySound, "SoundSample.wav");
@@ -231,7 +253,16 @@ function saveaudio() {
 }
 
 
-function savemidi() {
+function savemidi(data, fileName) {
+  var a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style = "display: none";
+  blob = new Blob(data, { type: "octet/stream" }),
+  url = window.URL.createObjectURL(blob);
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  window.URL.revokeObjectURL(url);
   console.log("save midi");
 }
 
@@ -241,18 +272,39 @@ function playaudio() {
 
 function playmidi() {
   console.log("play midi");
+  midiPart.index = 0;
+  midiPart.start();
+  // else {
+
+  //     toneSampler.triggerAttackRelease(0, 0);
+  //   midiPart.stop();
+  //   }
 }
 
 function playsound() {
   toneSampler.triggerAttack(1);
   console.log("play sound");
+    
 }
 
 function mutemic() {
-  console.log("mute mic");
+  micon = document.getElementById('onoff').value;
+if(micon == "On")
+    { 
+      mic.amp(0);
+      document.getElementById("onoff").value = "Off";
+      document.getElementById("micmute").innerText = "unmute";
+      console.log("mic muted");
+    }
+  else if(micon == "Off") {
   //mic.disconnect();
-  mic.amp(0);
-}
+  mic.amp(1);
+  document.getElementById("onoff").value = "On";
+  document.getElementById("micmute").innerText = "MUTE";
+  console.log("mic unmuted");
+    }
+  //console.log("mute button pressed");
+  }
 
 function sensitivity() {
   console.log("sensitivity was changed");
@@ -260,22 +312,19 @@ function sensitivity() {
 
 
 
-
-
-
 //Saving MIDI
 // (or arbitary file type)
-var saveMidiData = function (data, fileName) {
-  var a = document.createElement("a");
-  document.body.appendChild(a);
-  a.style = "display: none";
-  blob = new Blob(data, { type: "octet/stream" }),
-    url = window.URL.createObjectURL(blob);
-  a.href = url;
-  a.download = fileName;
-  a.click();
-  window.URL.revokeObjectURL(url);
-};
+// var saveMidiData = function (data, fileName) {
+//   var a = document.createElement("a");
+//   document.body.appendChild(a);
+//   a.style = "display: none";
+//   blob = new Blob(data, { type: "octet/stream" }),
+//     url = window.URL.createObjectURL(blob);
+//   a.href = url;
+//   a.download = fileName;
+//   a.click();
+//   window.URL.revokeObjectURL(url);
+// };
 
 
 function writeMIDICurrentNote(noteLength) {
@@ -322,6 +371,9 @@ function writeMIDICurrentNote(noteLength) {
 }
 
 function highlightNoteKey(incomingNote){
+  
+  //Will use this once the nexusUI piano widget starts working
+  //-Dominic
 
 //   for(i=0; i<11; i++){
 //      keyboard1.toggle( keyboard1.keys[i], false );
