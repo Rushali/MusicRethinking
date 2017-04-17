@@ -253,36 +253,42 @@ function saveaudio() {
 }
 
 
-function savemidi(data, fileName) {
-  var a = document.createElement("a");
-  document.body.appendChild(a);
-  a.style = "display: none";
-  blob = new Blob(data, { type: "octet/stream" }),
-  url = window.URL.createObjectURL(blob);
-  a.href = url;
-  a.download = fileName;
-  a.click();
-  window.URL.revokeObjectURL(url);
-  console.log("save midi");
+function savemidi() {
+
+  var data = 'data:audio/midi;base64,' + btoa(midi.encode())
+    var element = document.createElement('a');
+    element.setAttribute('href', data);
+    element.setAttribute('download', 'audioToNotes.mid');
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  
 }
 
 function playaudio() {
-  console.log("play audio");
+  console.log("playaduio()");
+
+    toneSampler.triggerAttackRelease(0, 0); //mimicing playmidi() functionality
+    toneSampler.triggerAttack(1);
+
 }
 
 function playmidi() {
-  console.log("play midi");
-  midiPart.index = 0;
-  midiPart.start();
-  // else {
-
-  //     toneSampler.triggerAttackRelease(0, 0);
-  //   midiPart.stop();
-  //   }
+  console.log("playmidi()");
+  
+    midiPart.stop(); //this makes sure you can re-start
+    midiPart.start();
 }
 
 function playsound() {
-  toneSampler.triggerAttack(1);
+  //will need to address this later
+  //does there need to be a whole other object for pre-recorded audio?
+  //or does functionality work quicker just by overwriting?
+
+
+  playaudio();
+  //toneSampler.triggerAttack(1);
   console.log("play sound");
     
 }
@@ -307,6 +313,9 @@ if(micon == "On")
   }
 
 function sensitivity() {
+  //highpass and lowpass hasn't been implemented yet
+  //so we'll take out the HTML element for now
+  //it is commented out in the index.html
   console.log("sensitivity was changed");
 }
 
@@ -380,9 +389,9 @@ function highlightNoteKey(incomingNote){
 //   }
 
 //  //keyboard1.toggle( keyboard1.keys[0], true );
-   if(incomingNote == "C"){
-     keyboard1.toggle( keyboard1.keys[0], true );
-   }
+//  if(incomingNote == "C"){
+//    keyboard1.toggle( keyboard1.keys[0], true );
+//  }
 //   else if(incomingNote == "C#"){
 //     keyboard1.toggle( keyboard1.keys[1], true );
 //   }
@@ -430,7 +439,6 @@ function keyPressed() {
   }
 
   if (key == "P") {
-    console.log("play sound");
 
     //Dominic
     //Updating on 4/15/17
