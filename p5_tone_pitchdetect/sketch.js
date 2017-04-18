@@ -48,7 +48,14 @@ var synth = new Tone.PolySynth(6, Tone.Synth).toMaster();
 
 function setup() {
 
- recInfoStatus = [
+  
+  // var audioContext = window.AudioContext || window.webkitAudioContext;
+	// this.context = new audioContext();
+  //audioContext = getAudioContext();
+  //nx.audioContext = getAudioContext();
+  //console.log(nx.audioContext);
+
+  recInfoStatus = [
     { startTime: 0 },
     { endTime: 0 },
     { timeLength: 0 },
@@ -73,9 +80,17 @@ function setup() {
   
   w = width / 2048;
 
+
+  amp = new p5.Amplitude();
+  amp.setInput(mic);
+
   
+  //Rushali's pretty branch didn't have the above two lines,
+  //just the commented out one below:
   //amp1.setInput(mic);
 
+
+  
   Tone.setContext(getAudioContext());
   pitchShiftProcess = new Tone.PitchShift({
     "pitch": 0.5
@@ -115,7 +130,7 @@ function setup() {
   //Load a Midi sequence and play through the synth
   //
 
-  midiPart = new Tone.Pattern(function (time, note) {
+  midiPart = new Tone.Part(function (time, note) {
     //Originally "part" instead of pattern
 
     //use the events to play the synth
@@ -125,15 +140,43 @@ function setup() {
 
   }, midi.tracks[0].notes);
 
+
+
+  midiRecordingLoop = new Tone.Loop(function (time) {
+    //triggered every eighth note. 
+    //console.log("midiRecordingLoop: " + time);
+
+    //Determining notes per second
+    //((Notes Per Beat)  x  (Beats Per Minute)) / 60secs  =  Notes Per Second
+    //Note Value	Notes Per Beat
+    // Quarter Note:	1
+    // 8th Note:	2
+    // 8th Note Triplet:	3
+    // 16th Note:	4
+    // 16th Note Triplet:	6
+    // 32nd Note:	8
+
+    //For now we will hard code the note per beat.
+    //Given 8th notes, we will create the note length in seconds and pass to function
+    //Doing it this way allows us to adjust tempo later without issue
+
+    var noteLength = ((8*Tone.Transport.bpm.value)/60)/60;
+
+    writeMIDICurrentNote(noteLength);
+  }, "8n").start(0);
+
+
   Tone.Transport.bpm.value = midi.header.bpm;
   Tone.Transport.start();
-
 
 }
 
 
 function draw() {
-  toneSampler.loop = 1;
+  
+  toneSampler.loop = 0;
+
+  
   background(255);
 
   // vol = amp1.getLevel();
@@ -167,9 +210,15 @@ function draw() {
   
   //ellipse(width/2, constrain(height-micLevel*height*5, 0, height), 10, 10);
 
-  writeMIDICurrentNote();
-  //Currently "writing" notes in the draw function, fast as possible
-  //Later we will only access our midi writer at specific intervals
+
+  
+
+
+  //writeMIDICurrentNote();
+  //old method of writing the notes
+
+
+  highlightNoteKey(freqToMidi(pitch));
 }
 
 
@@ -204,36 +253,42 @@ function saveaudio() {
 }
 
 
-function savemidi(data, fileName) {
-  var a = document.createElement("a");
-  document.body.appendChild(a);
-  a.style = "display: none";
-  blob = new Blob(data, { type: "octet/stream" }),
-  url = window.URL.createObjectURL(blob);
-  a.href = url;
-  a.download = fileName;
-  a.click();
-  window.URL.revokeObjectURL(url);
-  console.log("save midi");
+function savemidi() {
+
+  var data = 'data:audio/midi;base64,' + btoa(midi.encode())
+    var element = document.createElement('a');
+    element.setAttribute('href', data);
+    element.setAttribute('download', 'audioToNotes.mid');
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  
 }
 
 function playaudio() {
-  console.log("play audio");
+  console.log("playaduio()");
+
+    toneSampler.triggerAttackRelease(0, 0); //mimicing playmidi() functionality
+    toneSampler.triggerAttack(1);
+
 }
 
 function playmidi() {
-  console.log("play midi");
-  midiPart.index = 0;
-  midiPart.start();
-  // else {
-
-  //     toneSampler.triggerAttackRelease(0, 0);
-  //   midiPart.stop();
-  //   }
+  console.log("playmidi()");
+  
+    midiPart.stop(); //this makes sure you can re-start
+    midiPart.start();
 }
 
 function playsound() {
-  toneSampler.triggerAttack(1);
+  //will need to address this later
+  //does there need to be a whole other object for pre-recorded audio?
+  //or does functionality work quicker just by overwriting?
+
+
+  playaudio();
+  //toneSampler.triggerAttack(1);
   console.log("play sound");
     
 }
@@ -258,6 +313,9 @@ if(micon == "On")
   }
 
 function sensitivity() {
+  //highpass and lowpass hasn't been implemented yet
+  //so we'll take out the HTML element for now
+  //it is commented out in the index.html
   console.log("sensitivity was changed");
 }
 
@@ -278,28 +336,96 @@ function sensitivity() {
 // };
 
 
-function writeMIDICurrentNote() {
+function writeMIDICurrentNote(noteLength) {
 
   if (isRecording) {
     //console.log("inside writeMIDICurrentNote");
 
+    //"blank" note evaluations seem to mess with the midi recording functionality
+    //filtering out the "-" values that are generated
     //noteElem.innerHTML
+    if (noteElem.innerHTML != "-") {
+      currentMIDINote = freqToMidi(pitch);
+      //freqToMidi is a Tone function
+      //pitch is a variable from pitchdetect.js
 
-    currentMIDINote = freqToMidi(pitch);
-    //freqToMidi is a Tone function
-    //pitch is a variable from pitchdetect.js
+
+      var currentTime = new Date();
+      var currentRecTime = (currentTime - recInfoStatus.startTime) / 1000;
+
+      console.log(currentMIDINote + " @ " + currentRecTime);
+
+      midi.tracks[0].patch(32).note(currentMIDINote, currentRecTime, noteLength);
+      //The added note is 0.01 seconds long
+      //Will later adjust length based on different parameters
 
 
-    var currentTime = new Date();
-    var currentRecTime = (currentTime - recInfoStatus.startTime) / 1000;
+      //midiPart .add() function
+      //.removeAll to clear
+      //or new midiPart entirely
 
-    console.log(currentMIDINote + " @ " + currentRecTime);
+      midiPart = new Tone.Part(function (time, note) {
+        //Originally "part" instead of pattern
 
-    midi.tracks[0].patch(32).note(currentMIDINote, currentRecTime, 0.01);
-    //The added note is 0.01 seconds long
-    //Will later adjust length based on different parameters
+        //use the events to play the synth
+        synth.triggerAttackRelease(note.name, note.duration, time, note.velocity)
+        //Currently, the "time" doesn't work
+        //need to figure how to properly implement note.time
 
+      }, midi.tracks[0].notes);
+
+
+    }
   }
+}
+
+function highlightNoteKey(incomingNote){
+  
+  //Will use this once the nexusUI piano widget starts working
+  //-Dominic
+
+//   for(i=0; i<11; i++){
+//      keyboard1.toggle( keyboard1.keys[i], false );
+//   }
+
+//  //keyboard1.toggle( keyboard1.keys[0], true );
+//  if(incomingNote == "C"){
+//    keyboard1.toggle( keyboard1.keys[0], true );
+//  }
+//   else if(incomingNote == "C#"){
+//     keyboard1.toggle( keyboard1.keys[1], true );
+//   }
+//   else if(incomingNote == "D"){
+//     keyboard1.toggle( keyboard1.keys[2], true );
+//   }
+//   else if(incomingNote == "D#"){
+//     keyboard1.toggle( keyboard1.keys[3], true );
+//   }
+//   else if(incomingNote == "E"){
+//     keyboard1.toggle( keyboard1.keys[4], true );
+//   }
+//   else if(incomingNote == "F"){
+//     keyboard1.toggle( keyboard1.keys[5], true );
+//   }
+//   else if(incomingNote == "F#"){
+//     keyboard1.toggle( keyboard1.keys[6], true );
+//   }
+//   else if(incomingNote == "G"){
+//     keyboard1.toggle( keyboard1.keys[7], true );
+//   }
+//   else if(incomingNote == "G#"){
+//     keyboard1.toggle( keyboard1.keys[8], true );
+//   }
+//   else if(incomingNote == "A"){
+//     keyboard1.toggle( keyboard1.keys[9], true );
+//   }
+//   else if(incomingNote == "A#"){
+//     keyboard1.toggle( keyboard1.keys[10], true );
+//   }
+//   else if(incomingNote == "B"){
+//     keyboard1.toggle( keyboard1.keys[11], true );
+//   }    
+
 }
 
 function keyPressed() {
@@ -313,9 +439,18 @@ function keyPressed() {
   }
 
   if (key == "P") {
-    console.log("play sound");
+
+    //Dominic
+    //Updating on 4/15/17
+    //midiPart has been changed to a ToneJs Part instead of Pattern
+    //This means it needs to be explicitly stopped before I can start again
+    //putting in a stop here so that the playback triggers properly
+    //-which then also means we should do the same for the audio.
+    toneSampler.triggerAttackRelease(0, 0);
+    midiPart.stop();
+
     toneSampler.triggerAttack(1);
-    midiPart.index = 0;
+    //midiPart.index = 0;
     midiPart.start();
 
   } if (key == " ") {
@@ -330,6 +465,7 @@ function keyPressed() {
     save(testDownload, "test.mid");
   }
   if (key == "1") {
+    keyboard1.toggle( keyboard1.keys[11], true );
     //un-mute mic
     mic.amp(1);
   }
@@ -376,7 +512,7 @@ function keyPressed() {
     var data = 'data:audio/midi;base64,' + btoa(midi.encode())
     var element = document.createElement('a');
     element.setAttribute('href', data);
-    element.setAttribute('download', 'miditest.midi');
+    element.setAttribute('download', 'miditest.mid');
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
