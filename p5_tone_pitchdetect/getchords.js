@@ -181,10 +181,8 @@ document.getElementById("prechord").innerHTML = responseArray[1];
 }
 
 function randomchord() {
-
-for(var i = 2;i<11;i++){
-document.getElementById("prechord").innerHTML = responseArray[i];
+var randomnumber = floor(random(2,10));
+document.getElementById("prechord").innerHTML = responseArray[randomnumber];
 }
 
-  return  responseArray;
-}
+  //return  responseArray;
