@@ -18,6 +18,7 @@
 <script src="https://rawgit.com/lsu-emdm/nexusUI/master/dist/nexusUI.min.js"></script>
   </head>
   <body>
+  <p>TUNER</p>
 
     <p align="center">
 			<!-- <button id = "demo" onclick="this.innerText = togglePlayback()">use demo audio</button> -->
@@ -29,7 +30,11 @@
 
 			</a> -->
 
+			<button id="micmute" onclick="mutemic()" value="On">MUTE</button>
+
 			<button id="record" onclick="checkrecording()" innerText="record">record</button>
+
+
 
 			<button id="playaudio" onclick="playaudio()">Play Audio</button>
 			
@@ -42,7 +47,7 @@
 
 			
 
-			<button id="micmute" onclick="mutemic()" value="On">MUTE</button>
+			
 
 			
 
@@ -52,11 +57,11 @@
 
 			<!-- <button id="osc" onclick="toggleOscillator()">use oscillator</button> -->
 
-			<p align="left">Load new demo audio</p>
+			<!-- <p align="left">Load new demo audio</p>
 
 			<button align="center" align="center" id="playsound" onclick="playsound()">PLAY SOUND</button>
 
-			<input align="center" value="Load Sound" onchange="loadUserAudioFile(this.files)" type="file"></input>
+			<input align="center" value="Load Sound" onchange="loadUserAudioFile(this.files)" type="file"></input> -->
 
 			<!-- <input align="center" type="button" value="On" id="onoff" onclick="onoff();">
 			 -->
@@ -91,8 +96,11 @@
 
 		<div align="right" id="predictedchords" class="predict">
 
-			<button id="getchords" onclick="getChords(document.getElementById('note').innerHTML)" innerText="get chords">get chords</button>
-			
+			<button id="getchords" onclick="getChords(document.getElementById('note').innerHTML)" innerText="get chords">Get Chords</button>
+
+			<span id="detectedchord">--
+			</span>
+
 			<span id="prechord">--
 			</span>
 

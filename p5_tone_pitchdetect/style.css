@@ -55,15 +55,30 @@ input[type="button"]#record
 
 	}
 
+#detectedchord{
+	font-size: 164px;
+
+}
+
+#prechord{
+	width: 300px;
+	height:300px;
+	font-size: 40px;
+	top: 200px;
+
+}
+
 #predictedchords {
+	float: right; 
 	margin-left: auto;
-	text-align: right;
-	padding-top: 10px;
+	text-align: left;
 	font-size: 16px;
     display: inline-block;
     height: 180px;
     position: absolute;
   	z-index: 2;
+  	left:600px; 
+  	top:150px;
 }
 
 .droptarget { 

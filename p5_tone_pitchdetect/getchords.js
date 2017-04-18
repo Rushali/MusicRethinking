@@ -12,7 +12,8 @@ function getChords(incomingInformation) {
 
 
 
-  console.log("I have been given " + incomingInformation + " chord.");
+  //console.log("I have been given " + incomingInformation + " chord.");
+  document.getElementById("detectedchord").innerHTML = document.getElementById('note').innerHTML;
   
 
   responseArray[0] = "I have been given " + incomingInformation + " chord.";
