@@ -2,6 +2,7 @@ body {
 	margin: 0;
   	padding: 0;
 	font: 14pt 'Alike', sans-serif;
+	background-repeat: repeat-x;
 	}
 
 #maincanvas{
@@ -16,6 +17,72 @@ body {
 	text-align: left;
 }
 
+#live:hover{
+	font-family: 'Concert One', cursive;
+	font-size: 15pt;
+}
+
+#live:active{
+	background-color: blue;
+}
+
+#record:hover{
+	font-family: 'Concert One', cursive;
+	font-size: 15pt;
+}
+
+#record:active{
+	background-color: blue;
+}
+
+#playaudio:hover{
+	font-family: 'Concert One', cursive;
+	font-size: 15pt;
+}
+
+#playaudio:active{
+	background-color: blue;
+}
+
+#saveaudio:hover{
+	font-family: 'Concert One', cursive;
+	font-size: 15pt;
+}
+
+#saveaudio:active{
+	background-color: blue;
+}
+
+#savemidi:hover{
+	font-family: 'Concert One', cursive;
+	font-size: 15pt;
+}
+
+#savemidi:active{
+	background-color: blue;
+}
+
+#playmidi:hover{
+	font-family: 'Concert One', cursive;
+	font-size: 15pt;
+}
+
+#playmidi:active{
+	background-color: blue;
+}
+
+#micmute:hover{
+	/*background-color:white; */
+	margin-left:auto;
+	margin-right:auto;
+	font-family: 'Concert One', cursive;
+	font-size: 15pt;
+}
+
+#micmute:active{
+	background-color: blue;
+}
+
 #micmute {
 	/*background-color:white; */
 	margin-left:auto; 
@@ -24,12 +91,16 @@ body {
 }
 
 p {
+	margin-right: auto;
+	margin-left: auto;
+	align-items: center;
 	text-align: left;
 
 }
 
 #sensitivity {
 	/*background-color:white; */
+
 	margin-left:auto; 
 	margin-right:auto; 
 }
@@ -109,7 +180,7 @@ span#flat {
 span#sharp { 
 	display: inline; 
 }
-
+/*
 .testbutton {
   font-family: helvetica;
   color: #14396A !important;
@@ -125,4 +196,4 @@ span#sharp {
 .testbutton:hover {
   color: #14396A !important;
   background: #C7D4D6;
-}
+}*/

@@ -267,7 +267,7 @@ function savemidi() {
 }
 
 function playaudio() {
-  console.log("playaduio()");
+  //console.log("playaduio()");
 
     toneSampler.triggerAttackRelease(0, 0); //mimicing playmidi() functionality
     toneSampler.triggerAttack(1);
