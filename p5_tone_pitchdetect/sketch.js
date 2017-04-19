@@ -67,7 +67,7 @@ function setup() {
     //at that point, you calculate the difference, end time minus start time
   ];
 
-  canvas = createCanvas(1366, 784);
+  canvas = createCanvas(1000, 500);
   canvas.id("maincanvas");
   //var div1 = document.getElementById("detector");
   //canvas.parent("detector");
@@ -186,7 +186,7 @@ function draw() {
   //ellipse(width / 2, height / 2, diam, diam);
   //pushMatrix();
 
-  translate(width / 4, height / 4);
+  translate(width / 2, height / 2);
   spectrum = fft.analyze();
   for (var i = 0; i < spectrum.length; i++) {
     var angle = map(i, 0, spectrum.length, 0, 360);
@@ -267,7 +267,7 @@ function savemidi() {
 }
 
 function playaudio() {
-  console.log("playaduio()");
+  //console.log("playaduio()");
 
     toneSampler.triggerAttackRelease(0, 0); //mimicing playmidi() functionality
     toneSampler.triggerAttack(1);
@@ -294,18 +294,18 @@ function playsound() {
 }
 
 function mutemic() {
-  micon = document.getElementById('onoff').value;
+  micon = document.getElementById("micmute").value;
 if(micon == "On")
     { 
       mic.amp(0);
-      document.getElementById("onoff").value = "Off";
+      document.getElementById("micmute").value = "Off";
       document.getElementById("micmute").innerText = "unmute";
       console.log("mic muted");
     }
   else if(micon == "Off") {
   //mic.disconnect();
   mic.amp(1);
-  document.getElementById("onoff").value = "On";
+  document.getElementById("micmute").value = "On";
   document.getElementById("micmute").innerText = "MUTE";
   console.log("mic unmuted");
     }
