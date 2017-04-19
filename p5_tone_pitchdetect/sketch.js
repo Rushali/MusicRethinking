@@ -191,7 +191,7 @@ function draw() {
   for (var i = 0; i < spectrum.length; i++) {
     var angle = map(i, 0, spectrum.length, 0, 360);
     var amp2 = spectrum[i];
-    var r = map(amp2, 0, 512, 100, 1000);
+    var r = map(amp2, 0, 256, 100, 700);
     var x = r * cos(angle);
     var y = r * sin(angle);
     tint(255, 126);
@@ -227,7 +227,7 @@ function checkrecording() {
     isRecording = 1;
     mySoundRecorder.record(mySound);
     recInfoStatus.startTime = new Date();
-    console.log(mySound);
+    //console.log(mySound);
     // if (currentvalue == "record") {
     document.getElementById("record").innerText = "stop";
       console.log("recordbutton pressed"); 
