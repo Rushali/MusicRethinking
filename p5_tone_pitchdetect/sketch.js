@@ -294,18 +294,18 @@ function playsound() {
 }
 
 function mutemic() {
-  micon = document.getElementById('onoff').value;
+  micon = document.getElementById("micmute").value;
 if(micon == "On")
     { 
       mic.amp(0);
-      document.getElementById("onoff").value = "Off";
+      document.getElementById("micmute").value = "Off";
       document.getElementById("micmute").innerText = "unmute";
       console.log("mic muted");
     }
   else if(micon == "Off") {
   //mic.disconnect();
   mic.amp(1);
-  document.getElementById("onoff").value = "On";
+  document.getElementById("micmute").value = "On";
   document.getElementById("micmute").innerText = "MUTE";
   console.log("mic unmuted");
     }
