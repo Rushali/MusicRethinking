@@ -43,7 +43,10 @@ window.onload = function() {
 	audioContext = new AudioContext();
 	MAX_SIZE = Math.max(4,Math.floor(audioContext.sampleRate/5000));	// corresponds to a 5kHz signal
 	var request = new XMLHttpRequest();
-	request.open("GET", "../sounds/whistling3.ogg", true);
+	
+	
+
+	request.open("GET", "SoundSample.wav", true);
 	request.responseType = "arraybuffer";
 	request.onload = function() {
 	  audioContext.decodeAudioData( request.response, function(buffer) { 
@@ -54,12 +57,12 @@ window.onload = function() {
 
 	detectorElem = document.getElementById( "detector" );
 	canvasElem = document.getElementById( "output" );
-	DEBUGCANVAS = document.getElementById( "waveform" );
-	if (DEBUGCANVAS) {
-		waveCanvas = DEBUGCANVAS.getContext("2d");
-		waveCanvas.strokeStyle = "black";
-		waveCanvas.lineWidth = 1;
-	}
+	// DEBUGCANVAS = document.getElementById( "waveform" );
+	// if (DEBUGCANVAS) {
+	// 	waveCanvas = DEBUGCANVAS.getContext("2d");
+	// 	waveCanvas.strokeStyle = "black";
+	// 	waveCanvas.lineWidth = 1;
+	// }
 	pitchElem = document.getElementById( "pitch" );
 	noteElem = document.getElementById( "note" );
 	detuneElem = document.getElementById( "detune" );
@@ -88,8 +91,8 @@ window.onload = function() {
 	  	return false;
 	};
 
-
-
+	
+	
 }
 
 function error() {
@@ -108,9 +111,9 @@ function getUserMedia(dictionary, callback) {
     }
 }
 
-function gotStream(stream) {
+function gotStream() {
     // Create an AudioNode from the stream.
-    mediaStreamSource = audioContext.createMediaStreamSource(stream);
+    mediaStreamSource = audioContext.createMediaStreamSource(mic.stream);
 
     // Connect it to the destination.
     analyser = audioContext.createAnalyser();
@@ -119,31 +122,31 @@ function gotStream(stream) {
     updatePitch();
 }
 
-function toggleOscillator() {
-    if (isPlaying) {
-        //stop playing and return
-        sourceNode.stop( 0 );
-        sourceNode = null;
-        analyser = null;
-        isPlaying = false;
-		if (!window.cancelAnimationFrame)
-			window.cancelAnimationFrame = window.webkitCancelAnimationFrame;
-        window.cancelAnimationFrame( rafID );
-        return "play oscillator";
-    }
-    sourceNode = audioContext.createOscillator();
+// function toggleOscillator() {
+//     if (isPlaying) {
+//         //stop playing and return
+//         sourceNode.stop( 0 );
+//         sourceNode = null;
+//         analyser = null;
+//         isPlaying = false;
+// 		if (!window.cancelAnimationFrame)
+// 			window.cancelAnimationFrame = window.webkitCancelAnimationFrame;
+//         window.cancelAnimationFrame( rafID );
+//         return "play oscillator";
+//     }
+//     sourceNode = audioContext.createOscillator();
 
-    analyser = audioContext.createAnalyser();
-    analyser.fftSize = 2048;
-    sourceNode.connect( analyser );
-    analyser.connect( audioContext.destination );
-    sourceNode.start(0);
-    isPlaying = true;
-    isLiveInput = false;
-    updatePitch();
+//     analyser = audioContext.createAnalyser();
+//     analyser.fftSize = 2048;
+//     sourceNode.connect( analyser );
+//     analyser.connect( audioContext.destination );
+//     sourceNode.start(0);
+//     isPlaying = true;
+//     isLiveInput = false;
+//     updatePitch();
 
-    return "stop";
-}
+//     return "stop";
+// }
 
 function toggleLiveInput() {
     if (isPlaying) {
@@ -177,10 +180,50 @@ function toggleLiveInput() {
 	//however, you need to make sure that you are accessing the inner components of those p5 Objects
 	//example here: variable "mic" is a p5 AudioIn object, which uses a plain html5 MediaStream type object
 	//to access the AudioIn's MediaStream, type the varible and then .stream
-	gotStream(mic.stream);
-	
-
+	//gotStream(mic.stream);
+	gotStream();
 }
+
+
+
+
+//-Dominic
+	//I've added this here
+	//loadUserAudioFile isn't part of the original pitchdetect
+
+//This (finally) works
+//loading local audio files, you need to set up a server to make it work
+
+function loadUserAudioFile(files) {
+	
+	//these lines read the incoming files array
+	//we're only working with one file at a time right now,
+	//so we're only going to check for the first entry
+	var audioFile;
+	file = files[0];
+
+	//I have, more or less, tried to re-create the "createFileInput" structure provided by p5.DOM
+	//After MUCH troubleshooting, I figured out I need a callback function
+
+	var reader = new FileReader();
+	reader.addEventListener("load",function(){
+		function loadLocalFileToBuffer(){
+			//Once we know the file is loaded, we set all the appropriate buffers
+			toneSampler.set(mySound);
+			theBuffer = mySound.buffer;
+		}
+		//The second argument of a p5 soundfile's "loadSound()" function execues after the file is loaded
+		mySound = loadSound(reader.result,loadLocalFileToBuffer);
+	},false);
+
+	if(file){
+  		reader.readAsDataURL(file);
+	}
+}
+
+
+//Ends my addition
+//Back to your regularly schedules pitchdetect.js
 
 function togglePlayback() {
     if (isPlaying) {
@@ -211,9 +254,11 @@ function togglePlayback() {
     return "stop";
 }
 
+// 
+
 var rafID = null;
 var tracks = null;
-var buflen = 1024;
+var buflen = 2048;
 var buf = new Float32Array( buflen );
 
 var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];

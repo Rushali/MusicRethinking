@@ -1,48 +1,143 @@
 <html>
   <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/p5.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/addons/p5.dom.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/addons/p5.sound.min.js"></script>
     <script src="https://tonejs.github.io/build/Tone.min.js"></script>
+	<script src="https://tonejs.github.io/MidiConvert/build/MidiConvert.js"></script>
+	<script src="https://cdn.jsdelivr.net/g/filesaver.js"></script>
+
+
+<!--
+	<script src="pitchdetect.js"></script>
+	<script src="getchords.js"></script>
+    <script src="sketch.js"></script>
+-->
+	
     
     <link rel="stylesheet" type="text/css" href="style.css">
-
-
-    <link href='http://fonts.googleapis.com/css?family=Alike' rel='stylesheet' type='text/css'>
-		<style>
-			body { font: 14pt 'Alike', sans-serif;}
-			#note { font-size: 164px; }
-			.droptarget { background-color: #348781}
-			div.confident { color: black; }
-			div.vague { color: lightgrey; }
-			#note { display: inline-block; height:180px; text-align: left;}
-			
-			#detector { width: 300px; height: 300px; border: 4px solid gray; border-radius: 8px; text-align: center; padding-top: 10px;}
-			#output { width: 300px; height: 42px; }
-			#flat { display: none; }
-			#sharp { display: none; }
-			.flat #flat { display: inline; }
-			.sharp #sharp { display: inline; }
-		</style>
-
+    <link href="https://fonts.googleapis.com/css?family=Bungee+Hairline|Concert+One" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Alike' rel='stylesheet' type='text/css'>
+<script src="https://rawgit.com/lsu-emdm/nexusUI/master/dist/nexusUI.min.js"></script>
   </head>
   <body>
-    <script src="sketch.js"></script>
+  <p>TUNER</p>
 
+    <p align="center">
+			<!-- <button id = "demo" onclick="this.innerText = togglePlayback()">use demo audio</button> -->
+
+			<button id="live" onclick="toggleLiveInput()">Analyze Audio</button>
+
+			<!-- <a>
+			<input type="button" id="record" value="record" onclick="event.preventDefault(); checkrecording();" </>
+
+			</a> -->
+
+			<button id="micmute" onclick="mutemic()" value="On">MUTE</button>
+
+			<button id="record" onclick="checkrecording()" innerText="record">record</button>
+
+
+
+			<button id="playaudio" onclick="playaudio()">Play Audio</button>
+			
+			<button id="saveaudio" onclick="saveaudio()">Save Audio</button>
+
+			<button id="savemidi" onclick="savemidi()">Save MIDI</button>
+
+			
+			<button id="playmidi" onclick="playmidi()">Play MIDI</button>
+
+			
+
+			
+
+			
+
+
+
+			<!-- <input type="button" id ="record" value="record" onclick="startrecording();"> -->
+
+			<!-- <button id="osc" onclick="toggleOscillator()">use oscillator</button> -->
+
+			<!-- <p align="left">Load new demo audio</p>
+
+			<button align="center" align="center" id="playsound" onclick="playsound()">PLAY SOUND</button>
+
+			<input align="center" value="Load Sound" onchange="loadUserAudioFile(this.files)" type="file"></input> -->
+
+			<!-- <input align="center" type="button" value="On" id="onoff" onclick="onoff();">
+			 -->
+
+			<!-- <button onclick="updatePitch(0);">sample</button> -->
+		<!-- 	<input align="center" value="sensitivity" id="sensitivity" onchange="sensitivity()" type="range"></input> -->
+
+
+			<!-- <button onclick="updatePitch(0);">sample</button> 
+			<input align="center" value="sensitivity" id="sensitivity" onchange="sensitivity()" type="range"></input>
+				-->
+
+			<div align="center" id="detector" class="vague">
+		     	
+					<div id="d2" class="note">
+						<span id="note">--</span>
+					</div>  
+
+					<div id="d3" class="pitch">
+						<span id="pitch">--</span>
+					Hz</div>
+
+					<div id="detune">
+						<span id="detune_amt">--
+						</span>
+						<!-- <span id="flat">cents &#9837;
+						</span>
+						<span id="sharp">cents &#9839;
+						</span> -->
+					</div>
+			</div>
+
+		<div align="right" id="predictedchords" class="predict">
+
+			<button id="getchords" onclick="getChords(document.getElementById('note').innerHTML)" innerText="get chords">Grab Note</button>
+			<p></p>
+			<button id="majorchord" onclick="majorchord()">Get Major Chord</button>
+
+
+			<button id="minorchord" onclick="minorchord()">Get Minor Chord</button>
+			
+			<button id="randomchord" onclick="randomchord()">Get Random Chord</button>
+			<p></p>
+			<span id="detectedchord">--
+			</span>
+			<p></p>
+			<span id="prechord">--
+			</span>
+			<p></p>
+
+			
+
+			
+
+
+	  
+	  <!--<canvas nx="keyboard" style="width:800px;height:170px"></canvas>
+        -->
+	
+	 <!--<script src="nexusUI.js"></script>	-->
+	<script src="getchords.js"></script>	
     <script src="pitchdetect.js"></script>
-    <p>
-			<button onclick="this.innerText = togglePlayback()">use demo audio</button>
-			<button onclick="toggleLiveInput()">use live input</button>
-			<button onclick="toggleOscillator()">use oscillator</button>
-			<!--<button onclick="updatePitch(0);">sample</button>-->
-		</p>
+     <script src="sketch.js"></script>
+	<!--<script src="https://rawgit.com/lsu-emdm/nexusUI/master/dist/nexusUI.min.js"></script>
+    -->
 
-		<div id="detector" class="vague">
-			<div class="pitch"><span id="pitch">--</span>Hz</div>
-			<div class="note"><span id="note">--</span></div>   
-			<canvas id="output" width=300 height=42></canvas>
-			<div id="detune"><span id="detune_amt">--</span><span id="flat">cents &#9837;</span><span id="sharp">cents &#9839;</span></div>
-		</div>
-
-  </body>
+	<!--<script>
+		  nx.onload = function() {
+			  //nx.context=getAudioContext();
+	keyboard1.octaves = 1;
+	keyboard1.init();	
+		  }
+      </script>
+		
+    </body>
 </html>
