@@ -180,7 +180,8 @@ function toggleLiveInput() {
 	//however, you need to make sure that you are accessing the inner components of those p5 Objects
 	//example here: variable "mic" is a p5 AudioIn object, which uses a plain html5 MediaStream type object
 	//to access the AudioIn's MediaStream, type the varible and then .stream
-	gotStream(mic.stream);
+	//gotStream(mic.stream);
+	gotStream();
 }
 
 
