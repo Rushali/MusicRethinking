@@ -13,17 +13,22 @@
 	<script src="getchords.js"></script>
     <script src="sketch.js"></script>
 -->
-	
-    
+
+
     <link rel="stylesheet" type="text/css" href="style.css">
     <link href="https://fonts.googleapis.com/css?family=Bungee+Hairline|Concert+One" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Alike' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/css?family=Bungee+Hairline|Concert+One" rel="stylesheet">
 <script src="https://rawgit.com/lsu-emdm/nexusUI/master/dist/nexusUI.min.js"></script>
   </head>
   <body>
-  <p>TUNER</p>
+  <!--<p>TUNER</p>-->
+  <div align="center" id="titleimage">
+  <img src="Tuner.png" alt="Tuner" style="width:250px;height:250px">
+</div>
 
-    <p align="center">
+
+    <div align="center" id="buttons1">
 			<!-- <button id = "demo" onclick="this.innerText = togglePlayback()">use demo audio</button> -->
 
 			<button id="live" onclick="toggleLiveInput()">Analyze Audio</button>
@@ -36,23 +41,26 @@
 			<button id="micmute" onclick="mutemic()" value="On">MUTE</button>
 
 			<button id="record" onclick="checkrecording()" innerText="record">record</button>
+      <p></p>
 
 
 
 			<button id="playaudio" onclick="playaudio()">Play Audio</button>
-			
+
 			<button id="saveaudio" onclick="saveaudio()">Save Audio</button>
+      <p></p>
 
 			<button id="savemidi" onclick="savemidi()">Save MIDI</button>
 
-			
+
 			<button id="playmidi" onclick="playmidi()">Play MIDI</button>
+      <p></p>
+    </div>
 
-			
 
-			
 
-			
+
+
 
 
 
@@ -73,15 +81,15 @@
 		<!-- 	<input align="center" value="sensitivity" id="sensitivity" onchange="sensitivity()" type="range"></input> -->
 
 
-			<!-- <button onclick="updatePitch(0);">sample</button> 
+			<!-- <button onclick="updatePitch(0);">sample</button>
 			<input align="center" value="sensitivity" id="sensitivity" onchange="sensitivity()" type="range"></input>
 				-->
 
 			<div align="center" id="detector" class="vague">
-		     	
+
 					<div id="d2" class="note">
 						<span id="note">--</span>
-					</div>  
+					</div>
 
 					<div id="d3" class="pitch">
 						<span id="pitch">--</span>
@@ -101,11 +109,14 @@
 
 			<button id="getchords" onclick="getChords(document.getElementById('note').innerHTML)" innerText="get chords">Grab Note</button>
 			<p></p>
+      <p></p>
 			<button id="majorchord" onclick="majorchord()">Get Major Chord</button>
+      <p></p>
 
 
 			<button id="minorchord" onclick="minorchord()">Get Minor Chord</button>
-			
+      <p></p>
+
 			<button id="randomchord" onclick="randomchord()">Get Random Chord</button>
 			<p></p>
 			<span id="detectedchord">--
@@ -114,18 +125,19 @@
 			<span id="prechord">--
 			</span>
 			<p></p>
-
-			
-
-			
+    </div>
 
 
-	  
+
+
+
+
+
 	  <!--<canvas nx="keyboard" style="width:800px;height:170px"></canvas>
         -->
-	
+
 	 <!--<script src="nexusUI.js"></script>	-->
-	<script src="getchords.js"></script>	
+	<script src="getchords.js"></script>
     <script src="pitchdetect.js"></script>
      <script src="sketch.js"></script>
 	<!--<script src="https://rawgit.com/lsu-emdm/nexusUI/master/dist/nexusUI.min.js"></script>
@@ -135,9 +147,9 @@
 		  nx.onload = function() {
 			  //nx.context=getAudioContext();
 	keyboard1.octaves = 1;
-	keyboard1.init();	
+	keyboard1.init();
 		  }
       </script>
-		
+
     </body>
 </html>
