@@ -1,9 +1,14 @@
-body { 
+body {
 	margin: 0;
   	padding: 0;
 	font: 14pt 'Alike', sans-serif;
 	background-repeat: repeat-x;
 	}
+
+#buttons1{
+	text-align: center;
+}
+
 
 #maincanvas{
 	opacity: 0.5;
@@ -11,10 +16,10 @@ body {
   	z-index: 1;
 
 }
-#note { 
-	font-size: 164px; 
-	display: inline-block; 
-	height:180px; 
+#note {
+	font-size: 164px;
+	display: inline-block;
+	height:180px;
 	text-align: left;
 }
 
@@ -86,10 +91,33 @@ body {
 
 #micmute {
 	/*background-color:white; */
-	margin-left:auto; 
-	margin-right:auto; 
-	
+	margin-left:auto;
+	margin-right:auto;
+
 }
+
+
+#getchords:hover{
+	font-family: 'Concert One', cursive;
+	font-size: 15pt;
+}
+
+#majorchord:hover{
+	font-family: 'Concert One', cursive;
+	font-size: 15pt;
+}
+
+#minorchord:hover{
+	font-family: 'Concert One', cursive;
+	font-size: 15pt;
+}
+
+#randomchord:hover{
+	font-family: 'Concert One', cursive;
+	font-size: 15pt;
+}
+
+
 
 p {
 	margin-right: auto;
@@ -102,25 +130,25 @@ p {
 #sensitivity {
 	/*background-color:white; */
 
-	margin-left:auto; 
-	margin-right:auto; 
+	margin-left:auto;
+	margin-right:auto;
 }
 
 
 
-input[type="button"]#record 
+input[type="button"]#record
 {
 	color: black;
 }
 
 #detector {
-	width: 300px; 
-	height: 300px; 
+	width: 300px;
+	height: 300px;
 	/*border: 4px solid gray; */
 	/*margin-left: auto;*/
 	margin-right: auto;
-	border-radius: 8px; 
-	text-align: center; 
+	border-radius: 8px;
+	text-align: center;
 	padding-top: 10px;
 	position: absolute;
   	z-index: 3;
@@ -141,7 +169,7 @@ input[type="button"]#record
 }
 
 #predictedchords {
-	float: right; 
+	float: center;
 	margin-left: auto;
 	text-align: right;
 	font-size: 16px;
@@ -149,37 +177,41 @@ input[type="button"]#record
     height: 180px;
     position: absolute;
   	z-index: 2;
+<<<<<<< HEAD
   	left:900px; 
+=======
+  	left:600px;
+>>>>>>> 082f27d3847d96d6869715652b3f71aee0f0c9c2
   	top:150px;
 }
 
-.droptarget { 
+.droptarget {
 	background-color: #348781
 }
 
-div.confident { 
-	color: black; 
+div.confident {
+	color: black;
 }
 
-div.vague { 
-	color: lightgrey; 
+div.vague {
+	color: lightgrey;
 }
 
 div.predict {
-	color: lightgrey; 
+	color: lightgrey;
 }
-			
-#output { 
-	width: 300px; 
-	height: 42px; 
+
+#output {
+	width: 300px;
+	height: 42px;
 	color: red;
 }
-			
-span#flat { 
-	display: inline; 
+
+span#flat {
+	display: inline;
 }
-span#sharp { 
-	display: inline; 
+span#sharp {
+	display: inline;
 }
 /*
 .testbutton {
