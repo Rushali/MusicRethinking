@@ -6,6 +6,7 @@ body {
 	}
 
 #maincanvas{
+	opacity: 0.5;
 	position: relative;
   	z-index: 1;
 
@@ -94,7 +95,7 @@ p {
 	margin-right: auto;
 	margin-left: auto;
 	align-items: center;
-	text-align: left;
+	text-align: center;
 
 }
 
@@ -142,13 +143,13 @@ input[type="button"]#record
 #predictedchords {
 	float: right; 
 	margin-left: auto;
-	text-align: left;
+	text-align: right;
 	font-size: 16px;
     display: inline-block;
     height: 180px;
     position: absolute;
   	z-index: 2;
-  	left:600px; 
+  	left:900px; 
   	top:150px;
 }
 
