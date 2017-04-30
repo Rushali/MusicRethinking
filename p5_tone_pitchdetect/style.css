@@ -11,7 +11,6 @@ body {
 
 
 #maincanvas{
-	opacity: 0.5;
 	position: relative;
   	z-index: 1;
 
@@ -123,7 +122,7 @@ p {
 	margin-right: auto;
 	margin-left: auto;
 	align-items: center;
-	text-align: center;
+	text-align: left;
 
 }
 
@@ -177,11 +176,7 @@ input[type="button"]#record
     height: 180px;
     position: absolute;
   	z-index: 2;
-<<<<<<< HEAD
-  	left:900px; 
-=======
   	left:600px;
->>>>>>> 082f27d3847d96d6869715652b3f71aee0f0c9c2
   	top:150px;
 }
 

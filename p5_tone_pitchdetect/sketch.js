@@ -64,7 +64,7 @@ function setup() {
     //at that point, you calculate the difference, end time minus start time
   ];
 
-  canvas = createCanvas(1300, 700);
+  canvas = createCanvas(1000, 500);
   canvas.id("maincanvas");
 
   colorMode(HSB);
@@ -167,16 +167,13 @@ function draw() {
   background(255);
 
 
-
   //Visualize mic input
   translate(width / 2, height / 2);
-
   spectrum = fft.analyze();
   for (var i = 0; i < spectrum.length; i++) {
     var angle = map(i, 0, spectrum.length, 0, 360);
     var amp2 = spectrum[i];
-
-    var r = map(amp2, 0, 512, 100, 700);
+    var r = map(amp2, 0, 256, 100, 700);
     var x = r * cos(angle);
     var y = r * sin(angle);
     tint(255, 126);
