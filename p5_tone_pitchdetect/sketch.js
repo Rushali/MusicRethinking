@@ -9,7 +9,7 @@
 //Tone.js, with MidiConvert.js
 //p5.js
 //
-
+//Rune Madsen, Patrick Hebron, Yotam Mann, Justin Peake
 
 
 var canvas;
@@ -31,13 +31,15 @@ var spectrum;
 var recInfoStatus;
 
 
+
+//html elements for UI
 var div2 = document.getElementById("d2");
 var div3 = document.getElementById("d3");
 var div3 = document.getElementById("detune");
 
 
 
-//midi sequence object, MidiConvert
+//This is a MidiConvert midi sequence object 
 var midi;
 
 //midi score part object, for Tone.js note playback
@@ -46,14 +48,9 @@ var midiPart;
 //synthesizer, for Tone.js voice
 var synth = new Tone.PolySynth(6, Tone.Synth).toMaster();
 
-function setup() {
 
-  
-  // var audioContext = window.AudioContext || window.webkitAudioContext;
-	// this.context = new audioContext();
-  //audioContext = getAudioContext();
-  //nx.audioContext = getAudioContext();
-  //console.log(nx.audioContext);
+
+function setup() {
 
   recInfoStatus = [
     { startTime: 0 },
@@ -69,10 +66,6 @@ function setup() {
 
   canvas = createCanvas(1300, 700);
   canvas.id("maincanvas");
-  //var div1 = document.getElementById("detector");
-  //canvas.parent("detector");
-  //document.getElementById("maincanvas").appendChild(div1);
-
 
   colorMode(HSB);
   angleMode(DEGREES);
@@ -80,22 +73,18 @@ function setup() {
   
   w = width / 2048;
 
-
+  //We're using p5 for some of the audio functionality
+  //p5.sound has easy access to the browser microphone
+    //and the ability to save audio buffers as .wav files easily
   amp = new p5.Amplitude();
   amp.setInput(mic);
-
   
-  //Rushali's pretty branch didn't have the above two lines,
-  //just the commented out one below:
-  //amp1.setInput(mic);
-
-
   
+  
+  //Making sure that the Tone library shares browser audio context
   Tone.setContext(getAudioContext());
-  pitchShiftProcess = new Tone.PitchShift({
-    "pitch": 0.5
 
-  }).toMaster();
+  
   toneSampler = new Tone.Sampler({
     "loop": false
   }).toMaster();
@@ -113,38 +102,39 @@ function setup() {
   // .note(63, 1, 1)
   // .note("C6", 2, 1);
 
+
+  //Simple boolean isRecording status for audio recording
+  //RecInfoStatus was created for more robust timing control
+    //should eventually replace this, but for now this works
   isRecording = 0;
 
-  //There is "recInfoStatus", which will replace this eventually
-  //But we'll use this boolean for now
 
+  
   //p5 audio Mic for recording into a p5 buffer
   //Which then can be put into a Tone buffer later on
-  
   mic.start();
   mic.connect();
   mySound = new p5.SoundFile();
   mySoundRecorder = new p5.SoundRecorder();
   mySoundRecorder.setInput(mic);
+  
+
 
   //Load a Midi sequence and play through the synth
   //
-
   midiPart = new Tone.Part(function (time, note) {
-    //Originally "part" instead of pattern
-
     //use the events to play the synth
     synth.triggerAttackRelease(note.name, note.duration, time, note.velocity)
-    //Currently, the "time" doesn't work
-    //need to figure how to properly implement note.time
-
   }, midi.tracks[0].notes);
 
 
 
   midiRecordingLoop = new Tone.Loop(function (time) {
-    //triggered every eighth note. 
-    //console.log("midiRecordingLoop: " + time);
+    //This is triggered every eighth note.
+
+    //When writing MIDI notes in a sequence, we are approximately quantizing as 8th notes
+    //This is an artistic decision; users may want more or less granularity depending on use
+    //But quantizing in this way helps us avoid more spastic MIDI recordings
 
     //Determining notes per second
     //((Notes Per Beat)  x  (Beats Per Minute)) / 60secs  =  Notes Per Second
@@ -173,24 +163,19 @@ function setup() {
 
 
 function draw() {
-  
-  toneSampler.loop = 0;
-
-  
+    
   background(255);
 
-  // vol = amp1.getLevel();
-  // diam = map(vol, 0, 0.3, 10, 200);
 
-  //console.log(diam);
-  //ellipse(width / 2, height / 2, diam, diam);
-  //pushMatrix();
 
-  translate(width / 2, height / 3);
+  //Visualize mic input
+  translate(width / 2, height / 2);
+
   spectrum = fft.analyze();
   for (var i = 0; i < spectrum.length; i++) {
     var angle = map(i, 0, spectrum.length, 0, 360);
     var amp2 = spectrum[i];
+
     var r = map(amp2, 0, 512, 100, 700);
     var x = r * cos(angle);
     var y = r * sin(angle);
@@ -199,26 +184,12 @@ function draw() {
     line(0, 0, x, y);
   }
 
-
-  //run input through low pas mid pass hi pass filters, 
-  //popMatrix();
-
-  toneSampler.loop = 0;
   //not sure why this has to be set here, but it loops otherwise
-
+  toneSampler.loop = 0;
+  
+  //get mic level
   micLevel = mic.getLevel();
   
-  //ellipse(width/2, constrain(height-micLevel*height*5, 0, height), 10, 10);
-
-
-  
-
-
-  //writeMIDICurrentNote();
-  //old method of writing the notes
-
-
-  highlightNoteKey(freqToMidi(pitch));
 }
 
 
@@ -227,7 +198,7 @@ function checkrecording() {
     isRecording = 1;
     mySoundRecorder.record(mySound);
     recInfoStatus.startTime = new Date();
-    console.log(mySound);
+    //console.log(mySound);
     // if (currentvalue == "record") {
     document.getElementById("record").innerText = "stop";
       console.log("recordbutton pressed"); 
@@ -249,7 +220,7 @@ function checkrecording() {
 
 function saveaudio() {
   save(mySound, "SoundSample.wav");
-  console.log("save audio");
+  //console.log("save audio");
 }
 
 
@@ -267,7 +238,6 @@ function savemidi() {
 }
 
 function playaudio() {
-  //console.log("playaduio()");
 
     toneSampler.triggerAttackRelease(0, 0); //mimicing playmidi() functionality
     toneSampler.triggerAttack(1);
@@ -282,14 +252,9 @@ function playmidi() {
 }
 
 function playsound() {
-  //will need to address this later
-  //does there need to be a whole other object for pre-recorded audio?
-  //or does functionality work quicker just by overwriting?
-
 
   playaudio();
-  //toneSampler.triggerAttack(1);
-  console.log("play sound");
+  //console.log("play sound");
     
 }
 
@@ -316,24 +281,9 @@ function sensitivity() {
   //highpass and lowpass hasn't been implemented yet
   //so we'll take out the HTML element for now
   //it is commented out in the index.html
-  console.log("sensitivity was changed");
+  //console.log("sensitivity was changed");
 }
 
-
-
-//Saving MIDI
-// (or arbitary file type)
-// var saveMidiData = function (data, fileName) {
-//   var a = document.createElement("a");
-//   document.body.appendChild(a);
-//   a.style = "display: none";
-//   blob = new Blob(data, { type: "octet/stream" }),
-//     url = window.URL.createObjectURL(blob);
-//   a.href = url;
-//   a.download = fileName;
-//   a.click();
-//   window.URL.revokeObjectURL(url);
-// };
 
 
 function writeMIDICurrentNote(noteLength) {
@@ -356,8 +306,7 @@ function writeMIDICurrentNote(noteLength) {
       console.log(currentMIDINote + " @ " + currentRecTime);
 
       midi.tracks[0].patch(32).note(currentMIDINote, currentRecTime, noteLength);
-      //The added note is 0.01 seconds long
-      //Will later adjust length based on different parameters
+      //Note length determined by Tone time signature/bpm
 
 
       //midiPart .add() function
@@ -365,13 +314,8 @@ function writeMIDICurrentNote(noteLength) {
       //or new midiPart entirely
 
       midiPart = new Tone.Part(function (time, note) {
-        //Originally "part" instead of pattern
-
         //use the events to play the synth
         synth.triggerAttackRelease(note.name, note.duration, time, note.velocity)
-        //Currently, the "time" doesn't work
-        //need to figure how to properly implement note.time
-
       }, midi.tracks[0].notes);
 
 
@@ -379,60 +323,13 @@ function writeMIDICurrentNote(noteLength) {
   }
 }
 
-function highlightNoteKey(incomingNote){
-  
-  //Will use this once the nexusUI piano widget starts working
-  //-Dominic
 
-//   for(i=0; i<11; i++){
-//      keyboard1.toggle( keyboard1.keys[i], false );
-//   }
-
-//  //keyboard1.toggle( keyboard1.keys[0], true );
-//  if(incomingNote == "C"){
-//    keyboard1.toggle( keyboard1.keys[0], true );
-//  }
-//   else if(incomingNote == "C#"){
-//     keyboard1.toggle( keyboard1.keys[1], true );
-//   }
-//   else if(incomingNote == "D"){
-//     keyboard1.toggle( keyboard1.keys[2], true );
-//   }
-//   else if(incomingNote == "D#"){
-//     keyboard1.toggle( keyboard1.keys[3], true );
-//   }
-//   else if(incomingNote == "E"){
-//     keyboard1.toggle( keyboard1.keys[4], true );
-//   }
-//   else if(incomingNote == "F"){
-//     keyboard1.toggle( keyboard1.keys[5], true );
-//   }
-//   else if(incomingNote == "F#"){
-//     keyboard1.toggle( keyboard1.keys[6], true );
-//   }
-//   else if(incomingNote == "G"){
-//     keyboard1.toggle( keyboard1.keys[7], true );
-//   }
-//   else if(incomingNote == "G#"){
-//     keyboard1.toggle( keyboard1.keys[8], true );
-//   }
-//   else if(incomingNote == "A"){
-//     keyboard1.toggle( keyboard1.keys[9], true );
-//   }
-//   else if(incomingNote == "A#"){
-//     keyboard1.toggle( keyboard1.keys[10], true );
-//   }
-//   else if(incomingNote == "B"){
-//     keyboard1.toggle( keyboard1.keys[11], true );
-//   }    
-
-}
-
+//Here are some keyPress functions that replicate the UI funcionality
+  //and testing some new/other functionality
 function keyPressed() {
 
   if (key == "R") {
-
-    console.log("r pressed");
+    //console.log("r pressed");
     isRecording = 1;
     recInfoStatus.startTime = new Date();
     mySoundRecorder.record(mySound);
@@ -440,17 +337,10 @@ function keyPressed() {
 
   if (key == "P") {
 
-    //Dominic
-    //Updating on 4/15/17
-    //midiPart has been changed to a ToneJs Part instead of Pattern
-    //This means it needs to be explicitly stopped before I can start again
-    //putting in a stop here so that the playback triggers properly
-    //-which then also means we should do the same for the audio.
     toneSampler.triggerAttackRelease(0, 0);
     midiPart.stop();
 
     toneSampler.triggerAttack(1);
-    //midiPart.index = 0;
     midiPart.start();
 
   } if (key == " ") {
@@ -458,8 +348,6 @@ function keyPressed() {
     midiPart.stop();
   }
   if (key == "2") {
-    console.log("pressed 2");
-    //Mute mic
     mic.amp(0);
     testDownload = midi.encode();
     save(testDownload, "test.mid");
@@ -470,11 +358,6 @@ function keyPressed() {
     mic.amp(1);
   }
   if (key == "T") {
-    //imported from pitchdetect.js
-    //
-    //var note =  noteFromPitch( pitch );
-    //noteElem.innerHTML = noteStrings[note%12];
-    //
     //pitch and noteElem.innerHTML are in pitchdetect and
     //are used for the main text that shows notes in the example
     //
@@ -492,8 +375,6 @@ function keyPressed() {
   if (key == "S") {
     //save the current audio buffer
     //using p5 save functionality for the wav
-    //
-
     save(mySound, "SoundSample.wav");
 
     //Saving the current midi sequence
@@ -507,8 +388,6 @@ function keyPressed() {
     //
 
     //Encoding the current sequence into the proper Midi format
-
-
     var data = 'data:audio/midi;base64,' + btoa(midi.encode())
     var element = document.createElement('a');
     element.setAttribute('href', data);
@@ -520,12 +399,12 @@ function keyPressed() {
 
   }
   else {
-    //
+    
   }
 }
 
 function keyReleased() {
-  console.log("Key Released");
+  //console.log("Key Released");
   if (isRecording == 1) {
     isRecording = 0;
     recInfoStatus.endTime = new Date();
@@ -540,7 +419,7 @@ function keyReleased() {
 }
 
 function onoff() {
-  console.log("onoff working")
+  //console.log("onoff working")
   currentvalue = document.getElementById('onoff').value;
   if (currentvalue == "Off") {
     document.getElementById("onoff").value = "On";

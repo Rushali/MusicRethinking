@@ -22,6 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+
+//This is a web audio demo that is found at the following URL
+
+//Web Audio Demos Pitch Detect Example:
+//https://webaudiodemos.appspot.com/pitchdetect/index.html
+//
+//We use this as a base component, more or less untouched from the original
+//It will be used in conjunction with these other libraries
+//Tone.js, for synthesizer playback and timing/scheduling
+//MidiConvert.js, for saving of MIDI files
+//and p5.js for visualization via canvas object
+//
+//We have kept the comments of the original
+//Additions have //-Dominic comments accompanying them.
+
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
 var audioContext = null;
@@ -181,18 +196,17 @@ function toggleLiveInput() {
 	//example here: variable "mic" is a p5 AudioIn object, which uses a plain html5 MediaStream type object
 	//to access the AudioIn's MediaStream, type the varible and then .stream
 	//gotStream(mic.stream);
+	//-Dominic
 	gotStream();
 }
 
 
 
 
-//-Dominic
-	//I've added this here
-	//loadUserAudioFile isn't part of the original pitchdetect
-
-//This (finally) works
-//loading local audio files, you need to set up a server to make it work
+	
+	//I've added this here. loadUserAudioFile() isn't part of the original pitchdetect
+	//loading local audio files, you need to set up a server to make it work
+	//-Dominic
 
 function loadUserAudioFile(files) {
 	
@@ -203,7 +217,6 @@ function loadUserAudioFile(files) {
 	file = files[0];
 
 	//I have, more or less, tried to re-create the "createFileInput" structure provided by p5.DOM
-	//After MUCH troubleshooting, I figured out I need a callback function
 
 	var reader = new FileReader();
 	reader.addEventListener("load",function(){
@@ -212,7 +225,7 @@ function loadUserAudioFile(files) {
 			toneSampler.set(mySound);
 			theBuffer = mySound.buffer;
 		}
-		//The second argument of a p5 soundfile's "loadSound()" function execues after the file is loaded
+		//The second argument of a p5 soundfile's "loadSound()" function executes after the file is loaded
 		mySound = loadSound(reader.result,loadLocalFileToBuffer);
 	},false);
 
@@ -315,11 +328,11 @@ function autoCorrelateFloat( buf, sampleRate ) {
 var MIN_SAMPLES = 0;  // will be initialized when AudioContext is created.
 var GOOD_ENOUGH_CORRELATION = 0.5; // this is the "bar" for how close a correlation needs to be
 
-//-Dominic
-//I'm changing this "good enough correlation" number as I test
-//to see if I can smooth out the note estimation
+
+//We have changed the "Good enough corelation" to 0.5 fit our needs
 //original example was 0.9
-//Also, might make sense to do some audio effect processing to the analyzed audio
+//
+//In the future, it might make sense to do some audio effect processing to the analyzed audio
 //	ie; take out frequencies that we don't want to bother analyzing
 //-Dominic
 
