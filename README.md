@@ -1,5 +1,9 @@
 # Tuner Project
 
+Try out our current js app implementation here:
+
+https://ilahsur.github.io/MusicRethinking/
+
 ### A project fo Re-Thinking Production Tools by Rushali, Stanlyn and Dominic
 
 ## Description
@@ -96,8 +100,11 @@ Also, there are issues with audio bitrate mis-match on certain machines. Recorde
 
 ## Additional Resources
 https://webaudiodemos.appspot.com/pitchdetect/index.html
+
 http://tonejs.github.io/
+
 https://github.com/Tonejs/MidiConvert
+
 https://p5js.org/
 
 
