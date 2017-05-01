@@ -2,9 +2,6 @@
 
 ### A project fo Re-Thinking Production Tools by Rushali, Stanlyn and Dominic
 
-# TO DO for Readme.md
-These are the categories that were given in the Week 11 Documentation
-
 ## Description
 Tuner is an audio analysis web app that can take audio and translate the frequencies into approximate MIDI notation to be used in music making software like Garage Band, Ableton Live, or any other program that can load MIDI files.
 
