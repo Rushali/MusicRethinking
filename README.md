@@ -2,7 +2,7 @@
 
 Try out our current js app implementation here:
 
-https://ilahsur.github.io/MusicRethinking/
+https://rushali.github.io/MusicRethinking/
 
 ### A project fo Re-Thinking Production Tools by Rushali, Stanlyn and Dominic
 
