@@ -1,4 +1,4 @@
-# Tuner Project
+# Tuner 
 
 Try out our current js app implementation here:
 
@@ -35,7 +35,7 @@ This code is writing the notes, determined by the innerHTML of the noteElem DOM 
 function writeMIDICurrentNote(noteLength) {
 
   if (isRecording) {
-    
+
 
     //"blank" note evaluations seem to mess with the midi recording functionality
     //filtering out the "-" values that are generated
